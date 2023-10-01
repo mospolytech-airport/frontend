@@ -1,19 +1,15 @@
 import { createApp } from 'vue';
-import { createRouter, createWebHistory } from 'vue-router';
+import PrimeVue from 'primevue/config';
+import "primevue/resources/themes/lara-light-indigo/theme.css";
 
-import { routes } from './pages/routes';
+import { router } from './pages/routes';
 import { store } from './store';
 
 import App from './app.vue';
-
-const router = createRouter({
-    history: createWebHistory(),
-    routes: routes
-});
-
 
 const app = createApp(App);
 
 app.use(router);
 app.use(store);
+app.use(PrimeVue);
 app.mount('#app');
