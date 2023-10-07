@@ -1,11 +1,11 @@
 <template>
     <div class="container">
         <h1>AMONIC Airlines Automation System</h1>
+        <button @click="exit">Exit</button>
         <div class="user-info">
             <p>Hi {{ fullname }}, Welcome to AMONIC Airlines Automation System</p>
             <p>Time spent on system: {{ time }}</p>
             <p>Number of crashes: {{ crashes }}</p>
-            <button @click="exit">Exit</button>
         </div>
         <table class="activity-list">
             <thead>
