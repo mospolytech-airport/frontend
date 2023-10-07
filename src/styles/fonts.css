@@ -1,0 +1,91 @@
+  @font-face {
+    font-family: 'TGA';
+    src: url('./Amonic-Font/TeXGyreAdventor-Regular.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'TGA-Italic';
+    src: url('./Amonic-Font/TeXGyreAdventor-Italic.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'TGA-BoldItalic';
+    src: url('./Amonic-Font/TeXGyreAdventor-BoldItalic.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'TGA-Bold';
+    src: url('./Amonic-Font/TeXGyreAdventor-Bold.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Verdana';
+    src: url('./Amonic-Font/verdana.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Verdana-BoldItalic';
+    src: url('./Amonic-Font/verdanaz.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'Verdana-Bold';
+    src: url('./Amonic-Font/verdanab.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Verdana-Italic';
+    src: url('./Amonic-Font/verdanai.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT';
+    src: url('./Amonic-Font/TCM_____.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT Italic';
+    src: url('./Amonic-Font/TCMI____.ttf') format('truetype');
+    font-weight: normal;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT BoldItalic';
+    src: url('./Amonic-Font/TCBI____.ttf') format('truetype');
+    font-weight: bold;
+    font-style: italic;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT Bold';
+    src: url('./Amonic-Font/TCB_____.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT Condensed';
+    src: url('./Amonic-Font/TCCM____.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT Condensed Extra Bold';
+    src: url('./Amonic-Font/TCCEB.ttf') format('truetype');
+    font-weight: normal;
+    font-style: normal;
+  }
+  @font-face {
+    font-family: 'Tw Cen MT Condensed Bold';
+    src: url('./Amonic-Font/TCCB____.ttf') format('truetype');
+    font-weight: bold;
+    font-style: normal;
+  }
+  
