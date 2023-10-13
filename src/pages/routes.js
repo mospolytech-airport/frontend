@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import LoginPage from './login.vue';
 import HomePage from './home.vue';
+import AdminMenu from './adminMenu.vue'
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -20,6 +21,14 @@ const routes = [
     component: HomePage,
     meta: {
       requiresAuth: true
+    }
+  },
+  {
+    path: PATHS.ADMIN,
+    name: 'AdminMenu',
+    component: AdminMenu,
+    meta: {
+      requiresAuth: true,
     }
   }
 ];
