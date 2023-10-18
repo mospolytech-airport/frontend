@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import LoginPage from './login.vue';
 import HomePage from './home.vue';
+import MenuUserPage from './menuUsers.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -21,7 +22,15 @@ const routes = [
     meta: {
       requiresAuth: true
     }
-  }
+  },
+  {
+    path: PATHS.MENUUSER,
+    name: 'MenuUserPage',
+    component: MenuUserPage,
+    meta: {
+      requiresAuth: true
+    }
+  },
 ];
 
 const router = createRouter({
