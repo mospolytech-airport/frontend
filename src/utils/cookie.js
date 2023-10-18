@@ -4,9 +4,9 @@ class Cookie {
         const cookieArray = document.cookie.split(';');
 
         cookieArray.forEach((cookieItem) => {
-        cookieItem = cookieItem.trim();
-        const [key, value] = cookieItem.split('=');
-        cookieMap[key] = value;
+            cookieItem = cookieItem.trim();
+            const [key, value] = cookieItem.split('=');
+            cookieMap[key] = value;
         });
 
         return cookieMap;
@@ -18,7 +18,7 @@ class Cookie {
         cookieMap[key] = value;
 
         Object.keys(cookieMap).forEach((key) => {
-        document.cookie = `${key}=${cookieMap[key]}; path=/;`;
+            document.cookie = `${key}=${cookieMap[key]}; path=/;`;
         });
     }
 

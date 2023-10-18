@@ -1,18 +1,20 @@
-import { api } from '../../api';
-import { cookie } from '../../utils/cookie';
-import { ACCESS_TOKEN } from '../../constants';
+import { api } from '@/api';
+import { cookie } from '@/utils/cookie';
+import { ACCESS_TOKEN } from '@/constants';
 
 export const authModule = {
     namespaced: true,
     state: () => ({ 
         user: null,
         status: 'init', // init, loading, success, error
-        error: null
+        error: null,
+        editUser: null
     }),
     mutations: {
         setUser: (state, user) => state.user = user,
         setStatus: (state, status) => state.status = status,
-        setError: (state, error) => state.error = error
+        setError: (state, error) => state.error = error,
+        setEditUser: (state, editUser) => state.editUser = editUser
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -57,12 +59,37 @@ export const authModule = {
                     commit('setError', error.message);
                 }
             }
-        }
+        },
+        getEditUser: async ({ commit }, { id }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                const { data } = await api.getUser({ id, token });
+
+                commit('setStatus','success');
+                commit('setEditUser', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
     },
     getters: {
         getUser: state => state.user,
         getIsAuth: state => !!state.user,
         getStatus: state => state.status,
-        getError: state => state.error
+        getError: state => state.error,
+        getEditUser: state => ({
+            email: state.editUser?.email || '',
+            firstName: state.editUser?.firstName || '',
+            lastName: state.editUser?.lastName || '',
+            office: state.editUser?.office || '',
+            role: state.editUser?.role || ''
+        })
     }
 }

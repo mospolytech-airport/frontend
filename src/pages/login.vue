@@ -1,91 +1,111 @@
 <template>
-    <main class="login-page">
+    <main class="page">
         <div class="container">
-                <img class="logo" src="../assets/logo.png" />
-                <template v-if="isBlocked">
-                    <div class="text">Следующая попытка через: {{ leftTime }} сек</div>
-                </template>
-                <template v-else-if="error">
-                    <div class="text error">{{ error }}</div>
-                </template>
-                <template v-else>
+            <img
+                class="logo"
+                src="../assets/logo.png"
+            >
+            <template v-if="isBlocked">
+                <div class="text">
+                    Следующая попытка через: {{ leftTime }} сек
+                </div>
+            </template>
+            <template v-else-if="error">
+                <div class="text error">
+                    {{ error }}
+                </div>
+            </template>
+            <template v-else>
+                <form @submit="login">
                     <div class="input-group">
-                        <InputText placeholder="Username" v-model="user.username" />
-                        <InputText type="password" placeholder="Password" v-model="user.password" />
+                        <InputText
+                            v-model="user.username"
+                            placeholder="Username"
+                        />
+                        <InputText
+                            v-model="user.password"
+                            type="password"
+                            placeholder="Password"
+                        />
                     </div>
                     <div class="button-group">
-                        <Button @click="login" label="Login" />
+                        <Button
+                            type="submit"
+                            label="Login"
+                            @click="login"
+                        />
                     </div>
-                </template>
+                </form>
+            </template>
         </div>
     </main>
 </template>
 
 <script>
-    import InputText from 'primevue/inputtext';
-    import Button from 'primevue/button';
+import InputText from 'primevue/inputtext';
+import Button from 'primevue/button';
 
-    import { PATHS } from '../constants';
+import { PATHS } from '../constants';
     
-    export default {
-        components: {
-            InputText,
-            Button
-        },
-        data() {
-            return {
-                user: {
-                    username: '',
-                    password: '',
-                },
-                tryCount: 0,
-                isBlocked: false,
-                leftTime: 10
-            };
-        },
-        computed: {
-            error() {
-                return this.$store.getters.getError;
+export default {
+    name: 'LoginPage',
+    components: {
+        InputText,
+        Button
+    },
+    data() {
+        return {
+            user: {
+                username: '',
+                password: '',
             },
+            tryCount: 0,
+            isBlocked: false,
+            leftTime: 10
+        };
+    },
+    computed: {
+        error() {
+            return this.$store.getters.getError;
         },
-        methods: {
-            login() {
-                const self = this;
-                
-                self.$store.dispatch('auth/login', this.user).then(() => {
-                    self.$router.push(PATHS.HOME);
-                })
-
-                self.user.username = '';
-                self.user.password = '';
-                self.tryCount++;
-
-                if (self.tryCount > 3) {
-                    self.isBlocked = true;
-
-                    setTimeout(function timer() {
-                        self.leftTime--;
-
-                        if (self.leftTime === 0) {
-                            self.isBlocked = false;
-                            self.leftTime = 10;
-                            self.tryCount = 0;
-                        } else {
-                            setTimeout(timer, 1000);
-                        }
-                    }, 1000);
-                }
+    },
+    methods: {
+        login(event) {
+            if (event) {
+                event.preventDefault();
             }
-        },
-        name: 'LoginPage',
-    }
+
+            const self = this;
+                
+            self.$store.dispatch('auth/login', this.user).then(() => {
+                self.$router.push(PATHS.HOME);
+            })
+
+            self.user.username = '';
+            self.user.password = '';
+            self.tryCount++;
+
+            if (self.tryCount > 3) {
+                self.isBlocked = true;
+
+                setTimeout(function timer() {
+                    self.leftTime--;
+
+                    if (self.leftTime === 0) {
+                        self.isBlocked = false;
+                        self.leftTime = 10;
+                        self.tryCount = 0;
+                    } else {
+                        setTimeout(timer, 1000);
+                    }
+                }, 1000);
+            }
+        }
+    },
+}
 </script>
 
 <style scoped>
-    .login-page {
-        padding: 48px 0;
-    }
-
     .logo {
         margin: 0 auto;
         width: 50%;

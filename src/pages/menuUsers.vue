@@ -1,7 +1,9 @@
 <template>
     <div class="container">
         <h1>AMONIC Airlines Automation System</h1>
-        <button @click="exit">Exit</button>
+        <button @click="exit">
+            Exit
+        </button>
         <div class="user-info">
             <p>Hi {{ fullname }}, Welcome to AMONIC Airlines Automation System</p>
             <p>Time spent on system: {{ time }}</p>
@@ -18,7 +20,11 @@
                 </tr>
             </thead>
             <tbody>
-                <tr v-for="activity in activities" :key="activity.id" :class="{ 'crash': activity.crash }">
+                <tr
+                    v-for="activity in activities"
+                    :key="activity.id"
+                    :class="{ 'crash': activity.crash }"
+                >
                     <td>{{ activity.date }}</td>
                     <td>{{ activity.timeIn }}</td>
                     <td>{{ activity.timeOut }}</td>
@@ -32,7 +38,7 @@
 
 <script>
 export default {
-    name: 'menu-users',
+    name: 'MenuUsers',
     methods: {
 
     }
