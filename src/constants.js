@@ -4,4 +4,5 @@ export const PATHS = {
     HOME: '/',
     LOGIN: '/login',
     ADMIN: '/admin'
+    MENUUSER: '/menu-user',
 };

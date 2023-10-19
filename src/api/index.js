@@ -11,5 +11,8 @@ export const api = {
     register: ({ username, password }) => instanceApi.post('/auth/register/', { username, password }),
     me: ({ token }) => instanceApi.get('/auth/me/', { headers: { Authorization: `Bearer ${token}` } }),
     users: ({ token }) => instanceApi.get('/auth/', { headers: { Authorization: `Bearer ${token}` } }),
-    offices: ({ token }) => instanceApi.get('/office/', { headers: { Authorization: `Bearer ${token}` } })
-}
+    offices: ({ token }) => instanceApi.get('/office/', { headers: { Authorization: `Bearer ${token}` } }),
+    logout: ({ token }) => instanceApi.post('/auth/logout/', null, {
+        headers: { Authorization: `Bearer ${token}` }
+    })
+};
