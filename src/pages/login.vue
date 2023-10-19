@@ -15,6 +15,7 @@
                     </div>
                     <div class="button-group">
                         <Button @click="login" label="Login" />
+                        <Button @click="register" label="Register" />
                     </div>
                 </template>
         </div>
@@ -49,6 +50,9 @@
             },
         },
         methods: {
+            register() {
+                this.$router.push(PATHS.REGISTER);
+            },
             login() {
                 const self = this;
                 
@@ -107,6 +111,9 @@
         margin: 0 auto;
         width: 50%;
         margin-top: 48px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
 
     .text {
