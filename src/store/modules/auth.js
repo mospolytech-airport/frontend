@@ -7,12 +7,14 @@ export const authModule = {
     state: () => ({ 
         user: null,
         status: 'init', // init, loading, success, error
-        error: null
+        error: null,
+        users: []
     }),
     mutations: {
         setUser: (state, user) => state.user = user,
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
+        setUsers: (state, users) => state.users = users
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -58,6 +60,23 @@ export const authModule = {
                 }
             }
         },
+        users: async ({ commit }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                const { data } = await api.users({ token });
+                commit('setStatus','success');
+                commit('setUsers', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
         logout: async ({ commit }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
@@ -83,6 +102,7 @@ export const authModule = {
         getUser: state => state.user,
         getIsAuth: state => !!state.user,
         getStatus: state => state.status,
-        getError: state => state.error
+        getError: state => state.error,
+        getUsers: state => state.users
     }
 }
