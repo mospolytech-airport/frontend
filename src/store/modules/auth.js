@@ -12,7 +12,7 @@ export const authModule = {
     mutations: {
         setUser: (state, user) => state.user = user,
         setStatus: (state, status) => state.status = status,
-        setError: (state, error) => state.error = error
+        setError: (state, error) => state.error = error,
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -57,7 +57,27 @@ export const authModule = {
                     commit('setError', error.message);
                 }
             }
-        }
+        },
+        logout: async ({ commit }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+        
+            const token = cookie.getCookie(ACCESS_TOKEN);
+        
+            try {
+              await api.logout({ token }); // Здесь вызовите метод для выхода из системы на вашем API
+        
+              // Удалите токен из куки и сбросьте состояние пользователя
+              cookie.deleteCookie(ACCESS_TOKEN);
+              commit('setStatus', 'init');
+              commit('setUser', null);
+            } catch (error) {
+              if (error instanceof Error) {
+                commit('setStatus', 'error');
+                commit('setError', error.message);
+              }
+            }
+          }
     },
     getters: {
         getUser: state => state.user,
