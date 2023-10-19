@@ -40,9 +40,8 @@ export default {
     },
     computed: {
         totalSystemTime() {
-          const totalMinutes = this.sumTimes(this.user);
-          const hours = Math.floor(totalMinutes / 60);
-          const minutes = totalMinutes % 60;
+          const [hours, minutes] = this.sumTimes(this.user).split('.');
+
           return `${hours}:${minutes}`;
         },
         user() {
@@ -55,6 +54,7 @@ export default {
               const logout_time = time || '-';
 
               let time_spent = '-';
+
               if (login_time !== '-' && logout_time !== '-') {
                   let loginTimeParts = login_time.split(':');
                   let logoutTimeParts = logout_time.split('T')[1].split(':');
@@ -66,8 +66,8 @@ export default {
                   const logoutMinutes = parseInt(logoutTimeParts[1], 10);
 
                   // Рассчитайте разницу во времени
-                  const hoursDifference = logoutHours - loginHours;
-                  const minutesDifference = logoutMinutes - loginMinutes;
+                  let hoursDifference = logoutHours - loginHours;
+                  let minutesDifference = logoutMinutes - loginMinutes;
 
                   // Учесть случаи, когда разница может быть отрицательной
                   if (minutesDifference < 0) {
@@ -91,8 +91,7 @@ export default {
           return userData;
         },       
       users() {
-        const users = this.$store.state.auth.user;
-        return users;
+        return this.$store.state.auth.user;
       }  
     },
     created() {
@@ -132,8 +131,10 @@ export default {
          }
      
          const days = Math.floor(totalMinutes / (60 * 24));
+
          totalMinutes = totalMinutes % (60 * 24);
-         const hours = Math.floor(totalMinutes / 60);
+
+         let hours = Math.floor(totalMinutes / 60);
          const minutes = totalMinutes % 60;
      
          // Если общее время превышает 24 часа, добавляем дни к часам
