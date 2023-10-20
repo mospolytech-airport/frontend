@@ -40,9 +40,21 @@ export default {
     },
     computed: {
         totalSystemTime() {
-          const [hours, minutes] = this.sumTimes(this.user).split('.');
+            const totalMinutes = this.sumTimes(this.user);
 
-          return `${hours}:${minutes}`;
+            if (totalMinutes > 0) {
+                const days = Math.floor(totalMinutes / (60 * 24));
+                const hours = Math.floor((totalMinutes % (60 * 24)) / 60);
+                const minutes = totalMinutes % 60;
+
+                const formattedDays = days < 10 ? `0${days}` : `${days}`;
+                const formattedHours = hours < 10 ? `0${hours}` : `${hours}`;
+                const formattedMinutes = minutes < 10 ? `0${minutes}` : `${minutes}`;
+
+                return `${formattedDays}:${formattedHours}:${formattedMinutes}`;
+            } else {
+                return '00:00:00';
+            }
         },
         user() {
           const user = this.$store.state.auth.user;
@@ -52,44 +64,46 @@ export default {
             for (const [date, time] of Object.entries(user.login_logout_times)) {
               const [login_date, login_time] = date.split('T');
               const logout_time = time || '-';
-
+            
               let time_spent = '-';
-
+            
               if (login_time !== '-' && logout_time !== '-') {
-                  let loginTimeParts = login_time.split(':');
-                  let logoutTimeParts = logout_time.split('T')[1].split(':');
-
-                  // Преобразуйте часы и минуты в числа
-                  const loginHours = parseInt(loginTimeParts[0], 10);
-                  const loginMinutes = parseInt(loginTimeParts[1], 10);
-                  const logoutHours = parseInt(logoutTimeParts[0], 10);
-                  const logoutMinutes = parseInt(logoutTimeParts[1], 10);
-
-                  // Рассчитайте разницу во времени
-                  let hoursDifference = logoutHours - loginHours;
-                  let minutesDifference = logoutMinutes - loginMinutes;
-
-                  // Учесть случаи, когда разница может быть отрицательной
-                  if (minutesDifference < 0) {
-                    hoursDifference -= 1;
-                    minutesDifference += 60;
-                  }
-
-                  // Форматирование разницы в часы и минуты
-                  time_spent = `${hoursDifference}:${minutesDifference}`;
+                let loginTimeParts = login_time.split(':');
+                let logoutTimeParts = logout_time.split('T')[1].split(':');
+            
+                // Преобразуйте часы и минуты в числа
+                const loginHours = parseInt(loginTimeParts[0], 10);
+                const loginMinutes = parseInt(loginTimeParts[1], 10);
+                const logoutHours = parseInt(logoutTimeParts[0], 10);
+                const logoutMinutes = parseInt(logoutTimeParts[1], 10);
+            
+                // Рассчитайте разницу во времени
+                let hoursDifference = logoutHours - loginHours;
+                let minutesDifference = logoutMinutes - loginMinutes;
+            
+                // Учесть случаи, когда разница может быть отрицательной
+                if (minutesDifference < 0) {
+                  hoursDifference -= 1;
+                  minutesDifference += 60;
                 }
-
+            
+                // Форматирование разницы в часы и минуты
+                const formattedHours = hoursDifference < 10 ? `0${hoursDifference}` : `${hoursDifference}`;
+                const formattedMinutes = minutesDifference < 10 ? `0${minutesDifference}` : `${minutesDifference}`;
+                time_spent = `${formattedHours}:${formattedMinutes}`;
+              }
+          
               userData.push({
-                  login_date,
-                  formatted_login_time: this.formatTime(login_time),
-                  formatted_logout_time: this.formatTime(logout_time),
-                  time_spent
-                });
+                login_date,
+                formatted_login_time: this.formatTime(login_time),
+                formatted_logout_time: this.formatTime(logout_time),
+                time_spent
+              });
             }
           }
       
           return userData;
-        },       
+        },      
       users() {
         return this.$store.state.auth.user;
       }  
@@ -121,32 +135,24 @@ export default {
           return ''; // Handle cases where dateTime is undefined or null
         },
         sumTimes(timeData) {
-         let totalMinutes = 0;
+          let totalMinutes = 0;
                 
-         for (const timeEntry of timeData) {
-           if (timeEntry.time_spent !== '-') {
-             const [hours, minutes] = timeEntry.time_spent.split(':');
-             totalMinutes += parseInt(hours, 10) * 60 + parseInt(minutes, 10);
-           }
-         }
-     
-         const days = Math.floor(totalMinutes / (60 * 24));
-
-         totalMinutes = totalMinutes % (60 * 24);
-
-         let hours = Math.floor(totalMinutes / 60);
-         const minutes = totalMinutes % 60;
-     
-         // Если общее время превышает 24 часа, добавляем дни к часам
-         if (days > 0) {
-           hours += days * 24;
-         }
-     
-         return `${hours}.${minutes}`;
+          for (const timeEntry of timeData) {
+            const timeSpent = timeEntry.time_spent;
+            if (timeSpent && timeSpent.includes(':')) {
+              const [hours, minutes] = timeSpent.split(':');
+              const parsedHours = parseInt(hours, 10);
+              const parsedMinutes = parseInt(minutes, 10);
+            
+              if (!isNaN(parsedHours) && !isNaN(parsedMinutes)) {
+                totalMinutes += parsedHours * 60 + parsedMinutes;
+              }
+            }
+          }
+      
+          return totalMinutes; // Возвращаем сумму времени в минутах
         }
     },    
-
-
 }
 </script>
 
