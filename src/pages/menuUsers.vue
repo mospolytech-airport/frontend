@@ -11,7 +11,7 @@
             <p>Hi {{ users.first_name }}, Welcome to AMONIC Airlines Automation System</p>
             <div class="system-info">
                 <p>Time spent on system: {{ totalSystemTime }}</p>
-                <p>Number of crashes:</p>
+                <p>Number of crashes: {{ numberOfCrashes }}</p>
             </div>
         </div>
         <DataTable :value="user" tableStyle="min-width: 50rem">
@@ -19,7 +19,7 @@
             <Column field="formatted_login_time" header="Login time"></Column>
             <Column field="formatted_logout_time" header="Logout time"></Column>
             <Column field="time_spent" header="Time spent on system"></Column>
-            <!-- <Column field="error_msg" header="Unsuccessful logout reason"></Column> -->
+            <Column field="error_msg" header="Unsuccessful logout reason"></Column>
       </DataTable>
     </main>
 </template>
@@ -55,6 +55,9 @@ export default {
             } else {
                 return '00:00:00';
             }
+        },
+        numberOfCrashes() {
+          return this.user.filter(item => item.error_msg).length;
         },
         user() {
           const user = this.$store.state.auth.user;
@@ -136,7 +139,7 @@ export default {
         },
         sumTimes(timeData) {
           let totalMinutes = 0;
-                
+
           for (const timeEntry of timeData) {
             const timeSpent = timeEntry.time_spent;
             if (timeSpent && timeSpent.includes(':')) {
