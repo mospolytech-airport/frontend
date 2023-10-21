@@ -7,10 +7,27 @@
 
     export default {
         name: 'App',
+        data() {
+          return {
+            isClosePage: true
+          }
+        },
+        beforeRouteLeave(to, from, next) {
+          this.isClosePage = false;
+
+          next();
+        },
         created() {
             this.$store.dispatch('auth/me').catch(() => {
                 this.$router.push(PATHS.LOGIN);
             })
+        },
+        mounted() {
+          window.addEventListener('beforeunload', () => {
+            this.$store.dispatch('auth/logout', {
+              error: 'Закрыл вкладку браузера без выхода из системы'
+            })
+          })
         }
     }
 </script>
