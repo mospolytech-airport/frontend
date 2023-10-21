@@ -68,6 +68,7 @@ export const authModule = {
 
             try {
                 const { data } = await api.users({ token });
+
                 commit('setStatus','success');
                 commit('setUsers', data);
             } catch (error) {
@@ -77,17 +78,18 @@ export const authModule = {
                 }
             }
         },
-        logout: async ({ commit }) => {
+        logout: async ({ commit }, body) => {
             commit('setStatus', 'loading');
             commit('setError', null);
-        
+
+            const { error } = body || { error: null };
             const token = cookie.getCookie(ACCESS_TOKEN);
         
             try {
-              await api.logout({ token }); // Здесь вызовите метод для выхода из системы на вашем API
+              await api.logout({ token, error });
         
-              // Удалите токен из куки и сбросьте состояние пользователя
               cookie.deleteCookie(ACCESS_TOKEN);
+
               commit('setStatus', 'init');
               commit('setUser', null);
             } catch (error) {
@@ -99,10 +101,10 @@ export const authModule = {
           }
     },
     getters: {
-        getUser: state => state.user,
-        getIsAuth: state => !!state.user,
-        getStatus: state => state.status,
-        getError: state => state.error,
-        getUsers: state => state.users
+        user: state => state.user,
+        isAuth: state => !!state.user,
+        status: state => state.status,
+        error: state => state.error,
+        users: state => state.users
     }
 }

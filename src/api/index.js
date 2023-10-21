@@ -12,7 +12,7 @@ export const api = {
     me: ({ token }) => instanceApi.get('/auth/me/', { headers: { Authorization: `Bearer ${token}` } }),
     users: ({ token }) => instanceApi.get('/auth/', { headers: { Authorization: `Bearer ${token}` } }),
     offices: ({ token }) => instanceApi.get('/office/', { headers: { Authorization: `Bearer ${token}` } }),
-    logout: ({ token }) => instanceApi.post('/auth/logout/', null, {
+    logout: ({ token, error }) => instanceApi.post('/auth/logout/', { error }, {
         headers: { Authorization: `Bearer ${token}` }
     })
 };
