@@ -118,7 +118,24 @@ export const authModule = {
                 commit('setError', error.message);
               }
             }
-          }
+          },
+        edit: async ({ commit }, { email, ...props }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                await api.edit({ token, email, ...props });
+
+                commit('setStatus', 'init');
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        }
     },
     getters: {
         user: state => state.user,
