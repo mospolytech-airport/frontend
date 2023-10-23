@@ -8,13 +8,15 @@ export const authModule = {
         user: null,
         status: 'init', // init, loading, success, error
         error: null,
+        users: [],
         editUser: null
     }),
     mutations: {
         setUser: (state, user) => state.user = user,
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
-        setEditUser: (state, editUser) => state.editUser = editUser
+        setEditUser: (state, editUser) => state.editUser = editUser,
+        setUsers: (state, users) => state.users = users
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -78,13 +80,53 @@ export const authModule = {
                 }
             }
         },
+        users: async ({ commit }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                const { data } = await api.users({ token });
+
+                commit('setStatus','success');
+                commit('setUsers', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
+        logout: async ({ commit }, body) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const { error } = body || { error: null };
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+              await api.logout({ token, error });
+
+              cookie.deleteCookie(ACCESS_TOKEN);
+
+              commit('setStatus', 'init');
+              commit('setUser', null);
+            } catch (error) {
+              if (error instanceof Error) {
+                commit('setStatus', 'error');
+                commit('setError', error.message);
+              }
+            }
+          }
     },
     getters: {
-        getUser: state => state.user,
-        getIsAuth: state => !!state.user,
-        getStatus: state => state.status,
-        getError: state => state.error,
-        getEditUser: state => ({
+        user: state => state.user,
+        isAuth: state => !!state.user,
+        status: state => state.status,
+        error: state => state.error,
+        users: state => state.users,
+        editUser: state => ({
             email: state.editUser?.email || '',
             firstName: state.editUser?.firstName || '',
             lastName: state.editUser?.lastName || '',

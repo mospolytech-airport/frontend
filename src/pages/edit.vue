@@ -10,22 +10,19 @@
                     @submit="apply"
                 >
                     <InputText
-                        v-model="user.email"
+                        v-model="editUser.email"
                         placeholder="Email address"
                     />
                     <InputText
-                        v-model="user.firstName"
-                        type="password"
+                        v-model="editUser.firstName"
                         placeholder="First name"
                     />
                     <InputText
-                        v-model="user.lastName"
-                        type="password"
+                        v-model="editUser.lastName"
                         placeholder="Last name"
                     />
                     <InputText
-                        v-model="user.office"
-                        type="password"
+                        v-model="editUser.office"
                         placeholder="Office"
                     />
                     <div class="role-block">
@@ -33,7 +30,7 @@
                         <div class="role-group">
                             <label>
                                 <RadioButton
-                                    v-model="user.role"
+                                    v-model="editUser.role"
                                     name="role"
                                     value="user"
                                 />
@@ -41,7 +38,7 @@
                             </label>
                             <label>
                                 <RadioButton
-                                    v-model="user.role"
+                                    v-model="editUser.role"
                                     name="role"
                                     value="administrator"
                                 />
@@ -67,6 +64,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import RadioButton from 'primevue/radiobutton';
@@ -82,7 +80,7 @@ export default {
     },
     data() {
         return {
-            user: {
+            editUser: {
                 email: '',
                 firstName: '',
                 lastName: '',
@@ -92,26 +90,26 @@ export default {
         };
     },
     computed: {
-        status() {
-            return this.$store.getters.getStatus;
-        },
+        ...mapGetters('auth', ['status'])
     },
     mounted() {
-        this.getUser();
+        this.getEditUser();
     },
     methods: {
-        getUser() {
-            this.$store.dispatch('auth/getEditUser', this.$route.params.id)
+        getEditUser() {
+            this.$store.dispatch('auth/getEditUser', { id: this.$route.params.id })
                 .then(() => {
-                    this.user = {
-                        email: '',
-                        firstName: '',
-                        lastName: '',
-                        office: '',
-                        role: ''
+                    const { email, first_name, last_name, office, role } = this.$store.state.auth.editUser || {};
+
+                    this.editUser = {
+                        email,
+                        firstName: first_name,
+                        lastName:last_name,
+                        office,
+                        role
                     }
                 });
-        }
+        },
     }
 }
 </script>

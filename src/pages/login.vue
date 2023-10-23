@@ -10,11 +10,6 @@
                     Следующая попытка через: {{ leftTime }} сек
                 </div>
             </template>
-            <template v-else-if="error">
-                <div class="text error">
-                    {{ error }}
-                </div>
-            </template>
             <template v-else>
                 <form @submit="login">
                     <div class="input-group">
@@ -42,6 +37,7 @@
 </template>
 
 <script>
+import { mapGetters } from 'vuex';
 import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 
@@ -65,9 +61,7 @@ export default {
         };
     },
     computed: {
-        error() {
-            return this.$store.getters.getError;
-        },
+        ...mapGetters('auth', ['error'])
     },
     methods: {
         login(event) {

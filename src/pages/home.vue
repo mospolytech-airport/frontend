@@ -1,6 +1,7 @@
 <template>
     <main class="home-page">
-        home
+        <router-link to="/menu-user">menuUser</router-link>
+        <router-link to="/admin">admin</router-link>
     </main>
 </template>
 
