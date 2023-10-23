@@ -1,86 +1,123 @@
 <template>
     <main class="admin-menu">
-		<div class="header-cont">
-				<p>AMONIC Airlines Automation System</p>
-				<button @click="logout">X</button>
-		</div>
-		<div class="header-button">
-			<button>Add User</button>
-			<button @click="logout">Exit</button>
-		</div>
-		<div class="office">
-			<p>Office:</p>
-			<select class="office-selector" placeholder="Choose office" v-model="office">
-				<option v-for="office in offices" v-bind:key="office.id">
-					{{ office.title }}
-				</option>
-			</select>
-		</div>
-		<DataTable :value="users" v-model:selection="selectedUser" selectionMode="single" dataKey="id" tableStyle="min-width: 50rem">
-			<Column field="first_name" header="Name"></Column>
-			<Column field="last_name" header="Last Name"></Column>
-			<Column field="birthday" header="Age"></Column>
-			<Column field="role" header="User Role"></Column>
-			<Column field="email" header="Email Adress"></Column>
-			<Column field="office" header="Office"></Column>
-		</DataTable>
-		<div class="buttons">
-			<button @click="changeRole">Change Role</button>
-			<button @click="toggleUser">Enable/Disable Login</button>
-		</div>	
+        <div class="header-cont">
+            <p>AMONIC Airlines Automation System</p>
+            <button @click="logout">
+                X
+            </button>
+        </div>
+        <div class="header-button">
+            <button>Add User</button>
+            <button @click="logout">
+                Exit
+            </button>
+        </div>
+        <div class="office">
+            <p>Office:</p>
+            <select
+                v-model="office"
+                class="office-selector"
+                placeholder="Choose office"
+            >
+                <option
+                    v-for="office in offices"
+                    :key="office.id"
+                    :value="office.id"
+                >
+                    {{ office.title }}
+                </option>
+            </select>
+        </div>
+        <DataTable
+            v-model:selection="selectedUser"
+            :value="users"
+            selection-mode="single"
+            data-key="id"
+            table-style="min-width: 50rem"
+        >
+            <Column
+                field="first_name"
+                header="Name"
+            />
+            <Column
+                field="last_name"
+                header="Last Name"
+            />
+            <Column
+                field="birthday"
+                header="Age"
+            />
+            <Column
+                field="role"
+                header="User Role"
+            />
+            <Column
+                field="email"
+                header="Email Adress"
+            />
+            <Column
+                field="office"
+                header="Office"
+            />
+        </DataTable>
+        <div class="buttons">
+            <button @click="changeRole">
+                Change Role
+            </button>
+            <button @click="toggleUser">
+                Enable/Disable Login
+            </button>
+        </div>	
     </main>
 </template>
 
 <script>
-  	import Button from 'primevue/button';
-  	import Dropdown from 'primevue/dropdown';
-  	import DataTable from 'primevue/datatable';
-  	import Column from 'primevue/column';
-  
-  	export default {
-		name: 'AdminMenu',
-		components: {
-			Button,
-			Dropdown,
-			DataTable,
-			Column
-		},
-		data() {
-			return {
-				office: "",
-				selectedUser: null,
-			}  
-		},
-		methods: {
-			logout() {
-				this.$store.dispatch('auth/logout');
-				this.$router.push(PATHS.LOGIN);
-			},
-			toggleUser() {
-				console.log(this.selectedUser)
-			},
-			changeRole() {
-				console.log(this.selectedUser)
-			}
-		},    
-		computed: {
-			users () {
-				const users = this.$store.state.auth.users; 
-				if (this.office) {
-					return users.filter(user => user.office === this.office)
-				}
-				return users;
-			},
-			offices() {
-				const offices = this.$store.state.apps.offices;
-				return offices
-			}
-		},
-		created() {
-			this.$store.dispatch('auth/users', this.user);
-			this.$store.dispatch('apps/offices', this.user);
-		}
-	}
+import DataTable from 'primevue/datatable';
+import Column from 'primevue/column';
+
+export default {
+    name: 'AdminMenu',
+    components: {
+        DataTable,
+        Column
+    },
+    data() {
+        return {
+            office: "",
+            selectedUser: null,
+        }  
+    },    
+    computed: {
+        users() {
+            const users = this.$store.state.auth.users;
+            
+            if (this.office) {
+                return users.filter(user => user.office === this.office)
+            }
+            
+            return users;
+        },
+        offices() {
+            return this.$store.state.apps.offices;
+        }
+    },
+    created() {
+        this.$store.dispatch('auth/users', this.user);
+        this.$store.dispatch('apps/offices', this.user);
+    },
+    methods: {
+        logout() {
+            this.$store.dispatch('auth/logout');
+            this.$router.push(PATHS.LOGIN);
+        },
+        toggleUser() {
+            console.log(this.selectedUser)
+        },
+        changeRole() {
+            console.log(this.selectedUser)
+        }
+    }
+}
 </script>
 
 <style scoped lang="scss">

@@ -2,10 +2,14 @@
     <main class="admin-menu">
         <div class="header-cont">
             <p>AMONIC Airlines Automation System</p>
-            <button @click="logout">X</button>
+            <button @click="logout">
+                X
+            </button>
         </div>
         <div class="header-button">
-            <button @click="logout">Exit</button>
+            <button @click="logout">
+                Exit
+            </button>
         </div>
         <div class="user-info">
             <p>Hi {{ user?.first_name }}, Welcome to AMONIC Airlines Automation System</p>
@@ -14,32 +18,48 @@
                 <p>Number of crashes: {{ numberOfCrashes }}</p>
             </div>
         </div>
-        <DataTable :value="userData" tableStyle="min-width: 50rem">
-            <Column field="loginDate" header="Date"></Column>
-            <Column field="loginTime" header="Login time"></Column>
-            <Column field="logoutTime" header="Logout time"></Column>
-            <Column field="timeSpent" header="Time spent on system"></Column>
-            <Column field="error" header="Unsuccessful logout reason"></Column>
-      </DataTable>
+        <DataTable
+            :value="userData"
+            table-style="min-width: 50rem"
+        >
+            <Column
+                field="loginDate"
+                header="Date"
+            />
+            <Column
+                field="loginTime"
+                header="Login time"
+            />
+            <Column
+                field="logoutTime"
+                header="Logout time"
+            />
+            <Column
+                field="timeSpent"
+                header="Time spent on system"
+            />
+            <Column
+                field="error"
+                header="Unsuccessful logout reason"
+            />
+        </DataTable>
     </main>
 </template>
 
 <script>
-import Button from 'primevue/button';
+import { mapGetters } from 'vuex';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import { format, differenceInMilliseconds, intervalToDuration } from 'date-fns';
-import { mapGetters } from 'vuex';
 
 import { addZero } from '../utils/add-zero';
 import { PATHS } from '../constants';
 
 export default {
-    name: 'menu-users',
+    name: 'MenuUsers',
     components: {
-      Button,
-      DataTable,
-      Column
+        DataTable,
+        Column
     },
     computed: {
         totalSystemTime() {
@@ -49,49 +69,49 @@ export default {
             return `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
         },
         numberOfCrashes() {
-          return this.userData.filter(({error}) => error).length;
+            return this.userData.filter(({error}) => error).length;
         },
         userData() {
-          const user = this.user;
-          const userData = [];
+            const user = this.user;
+            const userData = [];
 
-          if (user && user.login_logout_times) {
-            for (const [login, logout] of Object.entries(user.login_logout_times)) {
-              let timeSpent;
+            if (user && user.login_logout_times) {
+                for (const [login, logout] of Object.entries(user.login_logout_times)) {
+                    let timeSpent;
 
-              const { logout_time, error } = logout || {};
-              const loginDate = login && format(new Date(login), 'dd.MM.yyyy');
-              const loginTime = login && format(new Date(login), 'HH:mm:ss');
-              const logoutTime = logout_time && format(new Date(logout_time), 'HH:mm:ss');
-              const timeSpentMs = login && logout_time && differenceInMilliseconds(new Date(login), new Date(logout_time));
+                    const { logout_time, error } = logout || {};
+                    const loginDate = login && format(new Date(login), 'dd.MM.yyyy');
+                    const loginTime = login && format(new Date(login), 'HH:mm:ss');
+                    const logoutTime = logout_time && format(new Date(logout_time), 'HH:mm:ss');
+                    const timeSpentMs = login && logout_time && differenceInMilliseconds(new Date(login), new Date(logout_time));
 
-              if (timeSpentMs) {
-                const { hours, minutes, seconds } = intervalToDuration({ start: 0, end: timeSpentMs });
+                    if (timeSpentMs) {
+                        const { hours, minutes, seconds } = intervalToDuration({ start: 0, end: timeSpentMs });
 
-                timeSpent = `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
-              }
+                        timeSpent = `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
+                    }
 
-              userData.push({
-                loginDate,
-                loginTime,
-                logoutTime,
-                timeSpent,
-                timeSpentMs: timeSpentMs || 0,
-                error
-              });
+                    userData.push({
+                        loginDate,
+                        loginTime,
+                        logoutTime,
+                        timeSpent,
+                        timeSpentMs: timeSpentMs || 0,
+                        error
+                    });
+                }
             }
-          }
-      
-          return userData;
-        },      
+
+            return userData;
+        },
         ...mapGetters('auth', ['user']),
     },
     methods: {
         logout() {
-          this.$store.dispatch('auth/logout');
-          this.$router.push(PATHS.LOGIN);
+            this.$store.dispatch('auth/logout');
+            this.$router.push(PATHS.LOGIN);
         },
-    },    
+    },
 }
 </script>
 
