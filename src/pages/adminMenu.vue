@@ -22,7 +22,7 @@
                 <option
                     v-for="office in offices"
                     :key="office.id"
-                    :value="office.id"
+                    :value="office.title"
                 >
                     {{ office.title }}
                 </option>
