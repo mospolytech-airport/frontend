@@ -19,11 +19,11 @@
         </div>
         <div class="main">
             <div class="user-info">
-                <p>Fieldwork: {date period}</p>
-                <p>Sample Size: {counts adults}</p> 
+                <p>Fieldwork: </p>
+                <p>Sample Size: </p> 
             </div>
             <DataTable
-                :value="userData"
+                :value="surveys"
                 table-style="min-width: 50rem"
                 showGridlines
                 class="table"
@@ -37,7 +37,7 @@
                 </Row>
                 <Row>
                     <Column header="Male" field="" />
-                    <Column header="Female" field="" />
+                    <Column header="Female" field="femaleCount" />
 
                     <Column header="18-24" field="" />
                     <Column header="25-39" field="" />
@@ -65,6 +65,7 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Row from 'primevue/row';
 import ColumnGroup from 'primevue/columngroup';
+import { mapGetters } from 'vuex';
 
 import { PATHS } from '../constants';
 
@@ -75,6 +76,10 @@ export default {
         Column,
         ColumnGroup,
         Row,
+    },
+    computed: {
+        ...mapGetters('surveys', ['surveys']),
+
     },
     methods: {
         logout() {
@@ -129,11 +134,5 @@ export default {
     border-bottom: solid 2px;
     margin-bottom: 20px;
 }
-.table {
-    border: solid 2px;
 
-}
-.table__column {
-    border: solid 2px;
-}
 </style>
