@@ -1,5 +1,5 @@
 <template>
-    <main class="admin-menu">
+    <main class="users-menu">
         <div class="header-cont">
             <p>AMONIC Airlines Automation System</p>
             <button @click="logout">
@@ -116,7 +116,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.admin-menu {
+.users-menu {
     width: 100vw;
     height: 100vh;
     border: solid 3px;

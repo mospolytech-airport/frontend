@@ -6,4 +6,5 @@ export const PATHS = {
     ADMIN: '/admin',
     MENUUSER: '/menu-user',
     EDIT: '/edit/:id',
+    SURVEYREPORTS: '/reports-survey',
 };
