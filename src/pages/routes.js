@@ -3,6 +3,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import LoginPage from './login.vue';
 import HomePage from './home.vue';
 import AdminMenu from './adminMenu.vue'
+import EditPage from './edit.vue';
 import MenuUserPage from './menuUsers.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
@@ -39,6 +40,11 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: PATHS.EDIT,
+    name: 'EditPage',
+    component: EditPage,
   }
 ];
 

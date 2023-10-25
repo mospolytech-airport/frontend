@@ -34,9 +34,9 @@ export const appsModule = {
       },
     },
     getters: {
-      getOffices: state => state.offices,
-      getOffice: state => office_id => state.offices.filter(office => office.id === office_id),
-        getStatus: state => state.status,
-        getError: state => state.error,
+      offices: state => state.offices,
+      office: state => office_id => state.offices.filter(office => office.id === office_id),
+      status: state => state.status,
+      error: state => state.error,
     }
 }

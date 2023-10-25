@@ -5,4 +5,5 @@ export const PATHS = {
     LOGIN: '/login',
     ADMIN: '/admin',
     MENUUSER: '/menu-user',
+    EDIT: '/edit/:id',
 };
