@@ -1,0 +1,184 @@
+<template>
+  <main class="register-page">
+    <div class="form">
+      <div class="form__field">
+        <label for="email">Email address:</label>
+        <InputText
+          type="email"
+          v-model="user.email"
+          :style="{ width: '25vw' }"
+          placeholder="Email"
+        />
+      </div>
+      <div class="form__field">
+        <label for="FirstName">First name:</label>
+        <InputText
+          type="text"
+          v-model="user.first_name"
+          :style="{ width: '25vw' }"
+          placeholder="Firstname"
+        />
+      </div>
+      <div class="form__field">
+        <label for="LastName">Last name:</label>
+        <InputText
+          type="text"
+          v-model="user.last_name"
+          :style="{ width: '25vw' }"
+          placeholder="Lastname"
+        />
+      </div>
+      <div class="form__field">
+        <label for="Office">Office</label>
+        <Dropdown
+          v-model="officeId"
+          editable
+          :options="offices"
+          placeholder="Select an Office"
+          :style="{ width: '25vw' }"
+          @change="changeOffice"
+        />
+      </div>
+      <div class="form__field">
+        <label for="birthdate">Birthdate:</label>
+        <InputText
+          type="text"
+          v-model="user.birthday"
+          :style="{ width: '25vw' }"
+          placeholder="yyyy-mm-dd"
+        />
+      </div>
+      <div class="form__field">
+        <label for="password">Password:</label>
+        <InputText
+          type="password"
+          :style="{ width: '25vw' }"
+          placeholder="Password"
+          v-model="user.password"
+        />
+      </div>
+      <div class="form__buttons">
+        <Button @click="save" label="Save" />
+        <Button @click="cancel" label="Cancel" />
+      </div>
+    </div>
+    <template v-if="error">
+      <div class="text error">{{ error }}</div>
+    </template>
+  </main>
+</template>
+
+<script>
+import Button from "primevue/button";
+import InputText from "primevue/inputtext";
+import Dropdown from "primevue/dropdown";
+import Calendar from "primevue/calendar";
+
+import { PATHS } from "../constants";
+
+export default {
+  components: {
+    InputText,
+    Button,
+    Dropdown,
+    Calendar,
+  },
+  data() {
+    return {
+      date: null,
+      officeId: null,
+      user: {
+        email: "",
+        first_name: "",
+        last_name: "",
+        birthday: "",
+        office: null,
+        password: "",
+      },
+    };
+  },
+  methods: {
+    changeOffice() {
+      this.office.forEach((element) => {
+        if (this.officeId === element.title) {
+          this.user.office = element.id
+        }
+      })
+    },
+
+    cancel() {
+      this.$router.push(PATHS.LOGIN);
+    },
+
+    save() {
+      const self = this;
+
+      self.$store.dispatch("auth/register", this.user).then(() => {
+        self.$router.push(PATHS.HOME);
+      });
+
+      self.user.email = "";
+      self.user.first_name = "";
+      self.user.last_name = "";
+      self.user.office = "";
+      self.user.birthday = "";
+      self.user.password = "";
+    },
+  },
+  computed: {
+    error() {
+      return this.$store.getters.auth.error;
+    },
+    office() {
+      return this.$store.state.auth.offices;
+    },
+    offices() {
+      let titles = [];
+      this.office.forEach((element) => {
+        titles.push(element.title);
+      });
+      return titles;
+    },
+  },
+  created() {
+    this.$store.dispatch("auth/offices", this.office);
+  },
+  name: "RegisterPage",
+};
+</script>
+
+<style lang="scss" scoped>
+.form {
+  padding-top: 86px;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  max-width: 50%;
+  margin: 0 auto;
+  row-gap: 24px;
+
+  &__field {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  &__buttons {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+  }
+}
+.text {
+  margin: 0 auto;
+  text-align: center;
+  margin-top: 64px;
+  font-size: 24px;
+  font-weight: 500;
+}
+
+.error {
+  color: #ff0000;
+}
+</style>

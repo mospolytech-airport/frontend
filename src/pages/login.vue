@@ -24,11 +24,8 @@
                         />
                     </div>
                     <div class="button-group">
-                        <Button
-                            type="submit"
-                            label="Login"
-                            @click="login"
-                        />
+                        <Button @click="login" label="Login" />
+                        <Button @click="register" label="Register" />
                     </div>
                 </form>
             </template>
@@ -37,66 +34,66 @@
 </template>
 
 <script>
-import { mapGetters } from 'vuex';
-import InputText from 'primevue/inputtext';
-import Button from 'primevue/button';
+    import InputText from 'primevue/inputtext';
+    import Button from 'primevue/button';
 
-import { PATHS } from '../constants';
+    import { PATHS } from '../constants';
     
-export default {
-    name: 'LoginPage',
-    components: {
-        InputText,
-        Button
-    },
-    data() {
-        return {
-            user: {
-                username: '',
-                password: '',
+    export default {
+        components: {
+            InputText,
+            Button
+        },
+        data() {
+            return {
+                user: {
+                    username: '',
+                    password: '',
+                },
+                tryCount: 0,
+                isBlocked: false,
+                leftTime: 10
+            };
+        },
+        computed: {
+            error() {
+                return this.$store.getters.error;
             },
-            tryCount: 0,
-            isBlocked: false,
-            leftTime: 10
-        };
-    },
-    computed: {
-        ...mapGetters('auth', ['error'])
-    },
-    methods: {
-        login(event) {
-            if (event) {
-                event.preventDefault();
-            }
-
-            const self = this;
+        },
+        methods: {
+            register() {
+                this.$router.push(PATHS.REGISTER);
+            },
+            login() {
+                const self = this;
                 
-            self.$store.dispatch('auth/login', this.user).then(() => {
-                self.$router.push(PATHS.HOME);
-            })
+                self.$store.dispatch('auth/login', this.user).then(() => {
+                    self.$router.push(PATHS.HOME);
+                })
 
-            self.user.username = '';
-            self.user.password = '';
-            self.tryCount++;
+                self.user.username = '';
+                self.user.password = '';
+                self.tryCount++;
 
-            if (self.tryCount > 3) {
-                self.isBlocked = true;
+                if (self.tryCount > 3) {
+                    self.isBlocked = true;
 
-                setTimeout(function timer() {
-                    self.leftTime--;
+                    setTimeout(function timer() {
+                        self.leftTime--;
 
-                    if (self.leftTime === 0) {
-                        self.isBlocked = false;
-                        self.leftTime = 10;
-                        self.tryCount = 0;
-                    } else {
-                        setTimeout(timer, 1000);
-                    }
-                }, 1000);
+                        if (self.leftTime === 0) {
+                            self.isBlocked = false;
+                            self.leftTime = 10;
+                            self.tryCount = 0;
+                        } else {
+                            setTimeout(timer, 1000);
+                        }
+                    }, 1000);
+                }
             }
-        }
-    },
-}
+        },
+        name: 'LoginPage',
+    }
 </script>
 
 <style scoped>
@@ -121,6 +118,9 @@ export default {
         margin: 0 auto;
         width: 50%;
         margin-top: 48px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
     }
 
     .text {

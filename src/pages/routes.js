@@ -2,7 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router';
 
 import LoginPage from './login.vue';
 import HomePage from './home.vue';
-import AdminMenu from './adminMenu.vue'
+import RegisterPage from './register.vue';
+import AdminMenu from './adminMenu.vue';
 import EditPage from './edit.vue';
 import MenuUserPage from './menuUsers.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
@@ -23,6 +24,14 @@ const routes = [
     component: HomePage,
     meta: {
       requiresAuth: true
+    }
+  },
+  {
+    path: PATHS.REGISTER,
+    name: 'RegisterPage',
+    component: RegisterPage,
+    meta: {
+      requiresAuth: false
     }
   },
   {
