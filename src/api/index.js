@@ -8,7 +8,7 @@ const instanceApi = axios.create({
 
 export const api = {
     login: ({ username, password }) => instanceApi.post('/auth/login/', { email: username, password }),
-    register: ({ username, password }) => instanceApi.post('/auth/register/', { username, password }),
+    register: ({ email, first_name, last_name, office, birthday, password }) => instanceApi.post('/auth/register/', { email, first_name, last_name, office, birthday, password }),
     me: ({ token }) => instanceApi.get('/auth/me/', { headers: { Authorization: `Bearer ${token}` } }),
     editUser: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -16,7 +16,11 @@ export const api = {
     getUser: ({ id, token }) => instanceApi.get(`/auth/user/${id}`, { headers: { Authorization: `Bearer ${token}` }}),
     users: ({ token }) => instanceApi.get('/auth/users/', { headers: { Authorization: `Bearer ${token}` } }),
     offices: ({ token }) => instanceApi.get('/office/', { headers: { Authorization: `Bearer ${token}` } }),
+    officesRegister: () => instanceApi.get('/office')
     logout: ({ token, error }) => instanceApi.post('/auth/logout/', { error }, {
+        headers: { Authorization: `Bearer ${token}` }
+    }),
+    edit: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props }, {
         headers: { Authorization: `Bearer ${token}` }
     })
 };

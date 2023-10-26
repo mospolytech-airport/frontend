@@ -14,15 +14,17 @@
                         placeholder="Email address"
                     />
                     <InputText
-                        v-model="editUser.firstName"
+                        v-model="editUser.first_name"
                         placeholder="First name"
                     />
                     <InputText
-                        v-model="editUser.lastName"
+                        v-model="editUser.last_name"
                         placeholder="Last name"
                     />
-                    <InputText
+                    <Dropdown
                         v-model="editUser.office"
+                        :options="offices"
+                        option-label="title"
                         placeholder="Office"
                     />
                     <div class="role-block">
@@ -69,6 +71,8 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 import RadioButton from 'primevue/radiobutton';
 import ProgressSpinner from 'primevue/progressspinner';
+import Dropdown from 'primevue/dropdown';
+import {PATHS} from "@/constants.js";
 
 export default {
     name: 'EditPage',
@@ -76,7 +80,8 @@ export default {
         InputText,
         Button,
         RadioButton,
-        ProgressSpinner
+        ProgressSpinner,
+        Dropdown
     },
     data() {
         return {
@@ -90,10 +95,12 @@ export default {
         };
     },
     computed: {
-        ...mapGetters('auth', ['status'])
+        ...mapGetters('auth', ['status']),
+        ...mapGetters('apps', ['offices'])
     },
     mounted() {
         this.getEditUser();
+        this.getOffices();
     },
     methods: {
         getEditUser() {
@@ -103,13 +110,19 @@ export default {
 
                     this.editUser = {
                         email,
-                        firstName: first_name,
-                        lastName:last_name,
+                        first_name,
+                        last_name,
                         office,
                         role
                     }
                 });
         },
+        getOffices() {
+            this.$store.dispatch('apps/offices');
+        },
+        apply() {
+            this.$store.dispatch('auth/edit', this.editUser);
+        }
     }
 }
 </script>
