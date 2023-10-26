@@ -113,8 +113,6 @@ export default {
     save() {
       const self = this;
 
-      console.log(this.user.birthday)
-
       self.$store.dispatch("auth/register", this.user).then(() => {
         self.$router.push(PATHS.HOME);
       });
@@ -129,7 +127,7 @@ export default {
   },
   computed: {
     error() {
-      return this.$store.getters.auth.getError;
+      return this.$store.getters.auth.error;
     },
     office() {
       return this.$store.state.auth.offices;

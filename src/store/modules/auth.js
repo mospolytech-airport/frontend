@@ -139,10 +139,10 @@ export const authModule = {
         }
     },
     getters: {
-        getUser: state => state.user,
-        getIsAuth: state => !!state.user,
-        getStatus: state => state.status,
-        getError: state => state.error,
-        getUsers: state => state.users
+        user: state => state.user,
+        isAuth: state => !!state.user,
+        status: state => state.status,
+        error: state => state.error,
+        users: state => state.users
     }
 }
