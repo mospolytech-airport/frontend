@@ -12,84 +12,71 @@
                 Exit
             </button>
         </div>
-        <div class="office">
-            <p>Office:</p>
-            <select
-                v-model="office"
-                class="office-selector"
-                placeholder="Choose office"
-            >
-                <option
-                    v-for="office in offices"
-                    :key="office.id"
-                    :value="office.title"
+        <div class="content">
+            <div class="office">
+                <p>Office:</p>
+                <select
+                    v-model="office"
+                    class="office-selector"
+                    placeholder="Choose office"
                 >
-                    {{ office.title }}
-                </option>
-            </select>
+                    <option
+                        v-for="office in offices"
+                        :key="office.id"
+                        :value="office.title"
+                    >
+                        {{ office.title }}
+                    </option>
+                </select>
+            </div>
+            <table class="table">
+                <tr class="table_header">
+                    <th>Name</th>
+                    <th>Last Name</th>
+                    <th>Age</th>
+                    <th>User Role</th>
+                    <th>Email Adress</th>
+                    <th>Office</th>
+                </tr>
+                <tr 
+                    class="table_row" 
+                    v-for="({id, first_name, last_name, birthday, role, email, office, is_active}) in users" :key="id"
+                    :class="{ active: id === selectedUser?.id, disabled: !is_active, enabled: is_active}"
+                    @click="selectRow(id)"
+                >
+                    <td>{{ first_name }}</td>
+                    <td>{{ last_name }}</td>
+                    <td>{{ birthday }}</td>
+                    <td>{{ role }}</td>
+                    <td>{{ email }}</td>
+                    <td>{{ office }}</td>
+                </tr>
+            </table>
+            <div class="buttons">
+                <button @click="changeRole">
+                    Change Role
+                </button>
+                <button @click="toggleUser">
+                    Enable/Disable Login
+                </button>
+            </div>	
         </div>
-        <DataTable
-            v-model:selection="selectedUser"
-            :value="users"
-            selection-mode="single"
-            data-key="id"
-            table-style="min-width: 50rem"
-        >
-            <Column
-                field="first_name"
-                header="Name"
-            />
-            <Column
-                field="last_name"
-                header="Last Name"
-            />
-            <Column
-                field="birthday"
-                header="Age"
-            />
-            <Column
-                field="role"
-                header="User Role"
-            />
-            <Column
-                field="email"
-                header="Email Adress"
-            />
-            <Column
-                field="office"
-                header="Office"
-            />
-        </DataTable>
-        <div class="buttons">
-            <button @click="changeRole">
-                Change Role
-            </button>
-            <button @click="toggleUser">
-                Enable/Disable Login
-            </button>
-        </div>	
     </main>
 </template>
 
 <script>
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-
 export default {
     name: 'AdminMenu',
-    components: {
-        DataTable,
-        Column
-    },
     data() {
         return {
             office: "",
-            selectedUser: null,
+			selectedUser: null,
+			isActive: null
         }  
     },    
     computed: {
         users() {
-            const users = this.$store.state.auth.users;
+            const users = this.$store.state.auth.users.map(user => {return {...user, colorClass: 'red-row' }});
             
             if (this.office) {
                 return users.filter(user => user.office === this.office)
@@ -110,11 +97,22 @@ export default {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
         },
-        toggleUser() {
-            console.log(this.selectedUser)
+		async toggleUser() {
+            const email = this.selectedUser.email;
+            const is_active = this.selectedUser.is_active === true ? false : true;
+            await this.$store.dispatch('auth/editUser', { email, is_active });
+
+            this.selectedUser = this.users.find(user => user.id === this.selectedUser.id) 
         },
-        changeRole() {
-            console.log(this.selectedUser)
+        async changeRole() {
+			const email = this.selectedUser.email;
+			const role = this.selectedUser.role === "User" ? "Administrator" : "User";
+			await this.$store.dispatch('auth/editUser', { email, role });
+
+			this.selectedUser = this.users.find(user => user.id === this.selectedUser.id)
+        },
+        selectRow(id) {
+            this.selectedUser = this.users.find(user => user.id === id);
         }
     }
 }
@@ -162,21 +160,56 @@ export default {
       cursor: pointer;
     }
 }
+.content {
+    padding: 0 18px;
+}
 .office {
 	display: flex;
 	gap: 1rem;
 	align-items: center;
 }
 .buttons {
-	margin: 1rem;
 	display: flex;
-	gap: 1rem;
+    margin-top: 1rem;
+	gap: 4rem;
 	button {
 		border: 2ps solid black;
 		border-radius: 0;
 		cursor: pointer;
-		font-size: 20px;
+		font-size: 16px;
 		background: 0;
 	}
+}
+
+.table {
+    width: 100%;
+    border: 3px solid black;
+    border-collapse: collapse;
+    &_header {
+        background: grey;
+        border: 3px solid black;
+        th {
+            text-align: start;
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
+    .active {
+        background: rgb(223, 223, 223) !important;
+    }
+    .enabled {
+        background: rgb(144, 231, 139);
+    }
+    .disabled {
+        background-color: red;
+        color: white; 
+    }
+    &_row {
+        td {
+            cursor: pointer;
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
 }
 </style>

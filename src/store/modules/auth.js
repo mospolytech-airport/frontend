@@ -16,7 +16,10 @@ export const authModule = {
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
         setEditUser: (state, editUser) => state.editUser = editUser,
-        setUsers: (state, users) => state.users = users
+        setUsers: (state, users) => state.users = users,
+        setUser: (state, editedUser) => state.users = state.users.map(
+            user => user.id === editedUser.id ? editedUser : user
+        )
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -73,6 +76,24 @@ export const authModule = {
 
                 commit('setStatus','success');
                 commit('setEditUser', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
+        editUser: async ({ commit, state}, { email, ...props }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                const { data } = await api.editUser({ token, email, ...props });
+
+                commit('setStatus', 'success');
+                commit('setUser', data);
             } catch (error) {
                 if (error instanceof Error) {
                     commit('setStatus', 'error');
