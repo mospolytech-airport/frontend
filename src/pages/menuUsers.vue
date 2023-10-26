@@ -2,151 +2,116 @@
     <main class="admin-menu">
         <div class="header-cont">
             <p>AMONIC Airlines Automation System</p>
-            <button @click="logout">X</button>
+            <button @click="logout">
+                X
+            </button>
         </div>
         <div class="header-button">
-            <button @click="logout">Exit</button>
+            <button @click="logout">
+                Exit
+            </button>
         </div>
         <div class="user-info">
-            <p>Hi {{ users.first_name }}, Welcome to AMONIC Airlines Automation System</p>
+            <p>Hi {{ user?.first_name }}, Welcome to AMONIC Airlines Automation System</p>
             <div class="system-info">
                 <p>Time spent on system: {{ totalSystemTime }}</p>
-                <p>Number of crashes:</p>
+                <p>Number of crashes: {{ numberOfCrashes }}</p>
             </div>
         </div>
-        <DataTable :value="user" tableStyle="min-width: 50rem">
-            <Column field="login_date" header="Date"></Column>
-            <Column field="formatted_login_time" header="Login time"></Column>
-            <Column field="formatted_logout_time" header="Logout time"></Column>
-            <Column field="time_spent" header="Time spent on system"></Column>
-            <!-- <Column field="error_msg" header="Unsuccessful logout reason"></Column> -->
-      </DataTable>
+        <DataTable
+            :value="userData"
+            table-style="min-width: 50rem"
+        >
+            <Column
+                field="loginDate"
+                header="Date"
+            />
+            <Column
+                field="loginTime"
+                header="Login time"
+            />
+            <Column
+                field="logoutTime"
+                header="Logout time"
+            />
+            <Column
+                field="timeSpent"
+                header="Time spent on system"
+            />
+            <Column
+                field="error"
+                header="Unsuccessful logout reason"
+            />
+        </DataTable>
     </main>
 </template>
 
 <script>
-import Button from 'primevue/button';
+import { mapGetters } from 'vuex';
 import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
+import { format, differenceInMilliseconds, intervalToDuration } from 'date-fns';
 
+import { addZero } from '../utils/add-zero';
 import { PATHS } from '../constants';
 
 export default {
-    name: 'menu-users',
+    name: 'MenuUsers',
     components: {
-      Button,
-      DataTable,
-      Column
+        DataTable,
+        Column
     },
     computed: {
         totalSystemTime() {
-          const [hours, minutes] = this.sumTimes(this.user).split('.');
+            const sumTimeSpent = this.userData.reduce((acc, { timeSpentMs }) => acc + timeSpentMs, 0);
+            const { hours, minutes, seconds } = intervalToDuration({ start: 0, end: sumTimeSpent });
 
-          return `${hours}:${minutes}`;
+            return `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
         },
-        user() {
-          const user = this.$store.state.auth.user;
-          const userData = [];
+        numberOfCrashes() {
+            return this.userData.filter(({error}) => error).length;
+        },
+        userData() {
+            const user = this.user;
+            const userData = [];
 
-          if (user && user.login_logout_times) {
-            for (const [date, time] of Object.entries(user.login_logout_times)) {
-              const [login_date, login_time] = date.split('T');
-              const logout_time = time || '-';
+            if (user && user.login_logout_times) {
+                for (const [login, logout] of Object.entries(user.login_logout_times)) {
+                    let timeSpent;
 
-              let time_spent = '-';
+                    const { logout_time, error } = logout || {};
+                    const loginDate = login && format(new Date(login), 'dd.MM.yyyy');
+                    const loginTime = login && format(new Date(login), 'HH:mm:ss');
+                    const logoutTime = logout_time && format(new Date(logout_time), 'HH:mm:ss');
+                    const timeSpentMs = login && logout_time && differenceInMilliseconds(new Date(login), new Date(logout_time));
 
-              if (login_time !== '-' && logout_time !== '-') {
-                  let loginTimeParts = login_time.split(':');
-                  let logoutTimeParts = logout_time.split('T')[1].split(':');
+                    if (timeSpentMs) {
+                        const { hours, minutes, seconds } = intervalToDuration({ start: 0, end: timeSpentMs });
 
-                  // Преобразуйте часы и минуты в числа
-                  const loginHours = parseInt(loginTimeParts[0], 10);
-                  const loginMinutes = parseInt(loginTimeParts[1], 10);
-                  const logoutHours = parseInt(logoutTimeParts[0], 10);
-                  const logoutMinutes = parseInt(logoutTimeParts[1], 10);
+                        timeSpent = `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
+                    }
 
-                  // Рассчитайте разницу во времени
-                  let hoursDifference = logoutHours - loginHours;
-                  let minutesDifference = logoutMinutes - loginMinutes;
-
-                  // Учесть случаи, когда разница может быть отрицательной
-                  if (minutesDifference < 0) {
-                    hoursDifference -= 1;
-                    minutesDifference += 60;
-                  }
-
-                  // Форматирование разницы в часы и минуты
-                  time_spent = `${hoursDifference}:${minutesDifference}`;
+                    userData.push({
+                        loginDate,
+                        loginTime,
+                        logoutTime,
+                        timeSpent,
+                        timeSpentMs: timeSpentMs || 0,
+                        error
+                    });
                 }
-
-              userData.push({
-                  login_date,
-                  formatted_login_time: this.formatTime(login_time),
-                  formatted_logout_time: this.formatTime(logout_time),
-                  time_spent
-                });
             }
-          }
-      
-          return userData;
-        },       
-      users() {
-        return this.$store.state.auth.user;
-      }  
-    },
-    created() {
-      this.$store.dispatch('auth/user', this.user);
+
+            return userData;
+        },
+        ...mapGetters('auth', ['user']),
     },
     methods: {
         logout() {
-          this.$store.dispatch('auth/logout');
-          this.$router.push(PATHS.LOGIN);
+            this.$store.dispatch('auth/logout');
+            this.$router.push(PATHS.LOGIN);
         },
-        formatTime(dateTime) {
-          if (dateTime === '-') {
-            return '-';
-          }
-          if (dateTime) {
-              if (dateTime.includes('T')) {
-                // Если dateTime содержит 'T', это login_time
-                const [datePart, timePart] = dateTime.split('T');
-                const [hours, minutes] = timePart.split(':');
-                return `${hours}:${minutes}`;
-              } else {
-                // Иначе это logout_time
-                const [hours, minutes] = dateTime.split(':');
-                return `${hours}:${minutes}`;
-              }
-            }
-          return ''; // Handle cases where dateTime is undefined or null
-        },
-        sumTimes(timeData) {
-         let totalMinutes = 0;
-                
-         for (const timeEntry of timeData) {
-           if (timeEntry.time_spent !== '-') {
-             const [hours, minutes] = timeEntry.time_spent.split(':');
-             totalMinutes += parseInt(hours, 10) * 60 + parseInt(minutes, 10);
-           }
-         }
-     
-         const days = Math.floor(totalMinutes / (60 * 24));
-
-         totalMinutes = totalMinutes % (60 * 24);
-
-         let hours = Math.floor(totalMinutes / 60);
-         const minutes = totalMinutes % 60;
-     
-         // Если общее время превышает 24 часа, добавляем дни к часам
-         if (days > 0) {
-           hours += days * 24;
-         }
-     
-         return `${hours}.${minutes}`;
-        }
-    },    
-
-
+    },
 }
 </script>
 

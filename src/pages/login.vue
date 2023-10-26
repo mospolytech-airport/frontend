@@ -1,23 +1,34 @@
 <template>
-    <main class="login-page">
+    <main class="page">
         <div class="container">
-                <img class="logo" src="../assets/logo.png" />
-                <template v-if="isBlocked">
-                    <div class="text">Следующая попытка через: {{ leftTime }} сек</div>
-                </template>
-                <template v-else-if="error">
-                    <div class="text error">{{ error }}</div>
-                </template>
-                <template v-else>
+            <img
+                class="logo"
+                src="../assets/logo.png"
+            >
+            <template v-if="isBlocked">
+                <div class="text">
+                    Следующая попытка через: {{ leftTime }} сек
+                </div>
+            </template>
+            <template v-else>
+                <form @submit="login">
                     <div class="input-group">
-                        <InputText placeholder="Username" v-model="user.username" />
-                        <InputText type="password" placeholder="Password" v-model="user.password" />
+                        <InputText
+                            v-model="user.username"
+                            placeholder="Username"
+                        />
+                        <InputText
+                            v-model="user.password"
+                            type="password"
+                            placeholder="Password"
+                        />
                     </div>
                     <div class="button-group">
                         <Button @click="login" label="Login" />
                         <Button @click="register" label="Register" />
                     </div>
-                </template>
+                </form>
+            </template>
         </div>
     </main>
 </template>
@@ -86,10 +97,6 @@
 </script>
 
 <style scoped>
-    .login-page {
-        padding: 48px 0;
-    }
-
     .logo {
         margin: 0 auto;
         width: 50%;

@@ -1,6 +1,6 @@
-import { api } from '../../api';
-import { cookie } from '../../utils/cookie';
-import { ACCESS_TOKEN } from '../../constants';
+import { api } from '@/api';
+import { cookie } from '@/utils/cookie';
+import { ACCESS_TOKEN } from '@/constants';
 
 export const authModule = {
     namespaced: true,
@@ -9,7 +9,8 @@ export const authModule = {
         status: 'init', // init, loading, success, error
         error: null,
         users: [],
-        offices: []
+        offices: [],
+        editUser: null
     }),
     mutations: {
         setUser: (state, user) => state.user = user,
@@ -17,6 +18,8 @@ export const authModule = {
         setError: (state, error) => state.error = error,
         setUsers: (state, users) => state.users = users,
         setOffices: (state, offices) => state.offices = offices,
+        setEditUser: (state, editUser) => state.editUser = editUser,
+        setUsers: (state, users) => state.users = users
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -62,6 +65,24 @@ export const authModule = {
                 }
             }
         },
+        getEditUser: async ({ commit }, { id }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                const { data } = await api.getUser({ id, token });
+
+                commit('setStatus','success');
+                commit('setEditUser', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
         users: async ({ commit }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
@@ -71,6 +92,7 @@ export const authModule = {
             try {
                 const { data } = await api.users({ token });
                 commit('setStatus', 'success');
+                commit('setStatus','success');
                 commit('setUsers', data);
             } catch (error) {
                 if (error instanceof Error) {
@@ -79,19 +101,20 @@ export const authModule = {
                 }
             }
         },
-        logout: async ({ commit }) => {
+        logout: async ({ commit }, body) => {
             commit('setStatus', 'loading');
             commit('setError', null);
-
+          
+            const { error } = body || { error: null };
             const token = cookie.getCookie(ACCESS_TOKEN);
 
             try {
-                await api.logout({ token }); // Здесь вызовите метод для выхода из системы на вашем API
+              await api.logout({ token, error });
 
-                // Удалите токен из куки и сбросьте состояние пользователя
-                cookie.deleteCookie(ACCESS_TOKEN);
-                commit('setStatus', 'init');
-                commit('setUser', null);
+              cookie.deleteCookie(ACCESS_TOKEN);
+
+              commit('setStatus', 'init');
+              commit('setUser', null);
             } catch (error) {
                 if (error instanceof Error) {
                     commit('setStatus', 'error');
@@ -136,6 +159,23 @@ export const authModule = {
                     commit('setError', error.message);
                 }
             }
+          },
+        edit: async ({ commit }, { email, ...props }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                await api.edit({ token, email, ...props });
+
+                commit('setStatus', 'init');
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
         }
     },
     getters: {
@@ -143,6 +183,13 @@ export const authModule = {
         isAuth: state => !!state.user,
         status: state => state.status,
         error: state => state.error,
-        users: state => state.users
+        users: state => state.users,
+        editUser: state => ({
+            email: state.editUser?.email || '',
+            firstName: state.editUser?.firstName || '',
+            lastName: state.editUser?.lastName || '',
+            office: state.editUser?.office || '',
+            role: state.editUser?.role || ''
+        })
     }
 }
