@@ -47,16 +47,24 @@
                     <th>AUH</th>
                     <th>BAH</th>
                     <th>DOH</th>
-                    <th>RYU</th>
+                    <th>RUH</th>
                     <th>CAI</th>
                 </tr>
-                <tr 
-                    class="table_row" 
-                    v-for="({id, departure, arrival, age, gender, cabintype, q1,q2,q3,q4 }) in surveys" :key="id"
-                >
-                    <td>{{ loginDate }}</td>
-                    <td>{{ loginTime }}</td>
-                    <td>{{ error }}</td>
+                <tr class="table_row">
+                    <td>{{ countGender('M') }}</td>
+                    <td>{{ countGender('F') }}</td>
+                    <td>{{ countAgeRange(18, 24) }}</td>
+                    <td>{{ countAgeRange(25, 39) }}</td>
+                    <td>{{ countAgeRange(40, 59) }}</td>
+                    <td>{{ countAgeRange(60, 999) }}</td>
+                    <td>{{ countCabinType('Economy') }}</td>
+                    <td>{{ countCabinType('Business') }}</td>
+                    <td>{{ countCabinType('First') }}</td>
+                    <td>{{ countAirport('AUH') }}</td>
+                    <td>{{ countAirport('BAH') }}</td>
+                    <td>{{ countAirport('DOH') }}</td>
+                    <td>{{ countAirport('RUH') }}</td>
+                    <td>{{ countAirport('CAI') }}</td>
                 </tr>
             </table>
         </div>
@@ -70,11 +78,11 @@ export default {
     name: 'ReportsSurvey',
 
     created() {
-            this.$store.dispatch('surveys/surveys');
+            this.$store.dispatch('survey/surveys');
         },
     computed: {
         surveys() {
-            return this.$store.state.surveys.surveys;
+            return this.$store.state.survey.surveys;
         },
         fieldworkStartDate() {
             return this.formatDate(this.surveys[0]?.month);
@@ -84,17 +92,29 @@ export default {
         }
     },
     methods: {
+        countGender(gender) {
+            return this.surveys.filter(item => item.gender === gender).length;
+        },
+        countAgeRange(min, max) {
+            return this.surveys.filter(item => item.age >= min && item.age <= max).length;
+        },
+        countCabinType(cabinType) {
+            return this.surveys.filter(item => item.cabintype === cabinType).length;
+        },
+        countAirport(airport) {
+            return this.surveys.filter(item => item.arrival === airport).length;
+        },
         logout() {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
         },
         formatDate(dateString) {
-        if (!dateString) {
-            return "";
-        }
-        const date = new Date(dateString);
-        const options = { year: 'numeric', month: 'long' };
-        return date.toLocaleDateString('en-US', options);
+            if (!dateString) {
+                return "";
+            }
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long' };
+            return date.toLocaleDateString('en-US', options);
         },    
     },
 }
