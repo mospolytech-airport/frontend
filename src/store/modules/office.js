@@ -2,7 +2,7 @@ import { api } from '../../api';
 import { cookie } from '../../utils/cookie';
 import { ACCESS_TOKEN } from '../../constants';
 
-export const appsModule = {
+export const officeModule = {
     namespaced: true,
     state: () => ({ 
         status: 'init', // init, loading, success, error
