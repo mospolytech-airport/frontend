@@ -19,131 +19,103 @@
         </div>
         <div class="main">
             <div class="user-info">
-                <p>Fieldwork: {{ }}</p>
+                <p>Fieldwork: {{ fieldworkStartDate }} - {{ fieldworkEndDate }}</p>
                 <p>Sample Size: {{ surveys?.length }}</p> 
             </div>
-            <DataTable
-                :value="surveys"
-                table-style="min-width: 50rem"
-                show-gridlines
-                class="table"
-            >
-                <ColumnGroup type="header">
-                    <Row>
-                        <Column
-                            header="Gender"
-                            :colspan="2"
-                        />
-                        <Column
-                            header="Age"
-                            :colspan="4"
-                        />
-                        <Column
-                            header="Cabin Type"
-                            :colspan="3"
-                        />
-                        <Column
-                            header="Destination Airport"
-                            :colspan="5"
-                        />
-                    </Row>
-                    <Row>
-                        <Column
-                            header="Male"
-                            field=""
-                        />
-                        <Column
-                            header="Female"
-                            field="femaleCount"
-                        />
+            <table class="table">
+                <!-- Заголовок таблицы -->
+                <tr class="table_header">
+                    <th colspan="2">Gender</th>
+                    <th colspan="4">Age</th>
+                    <th colspan="3">Cabin Type</th>
+                    <th colspan="5">Destination Airport</th>
+                </tr>
+                <!-- Субзаголовок таблицы -->
+                <tr class="table_subheader">
+                    <th>Male</th>
+                    <th>Female</th>
 
-                        <Column
-                            header="18-24"
-                            field=""
-                        />
-                        <Column
-                            header="25-39"
-                            field=""
-                        />
-                        <Column
-                            header="40-59"
-                            field=""
-                        />
-                        <Column
-                            header="60+"
-                            field=""
-                        />
+                    <th>18-24</th>
+                    <th>25-39</th>
+                    <th>40-59</th>
+                    <th>60+</th>
 
-                        <Column
-                            header="Economy"
-                            field=""
-                        />
-                        <Column
-                            header="Business"
-                            field=""
-                        />
-                        <Column
-                            header="First"
-                            field=""
-                        />
+                    <th>Economy</th>
+                    <th>Business</th>
+                    <th>First</th>
 
-                        <Column
-                            header="AUH"
-                            field=""
-                        />
-                        <Column
-                            header="BAH"
-                            field=""
-                        />
-                        <Column
-                            header="DOH"
-                            field=""
-                        />
-                        <Column
-                            header="RYU"
-                            field=""
-                        />
-                        <Column
-                            header="CAI"
-                            field=""
-                        />
-                    </Row>
-                </ColumnGroup>
-            </DataTable>
+                    <th>AUH</th>
+                    <th>BAH</th>
+                    <th>DOH</th>
+                    <th>RUH</th>
+                    <th>CAI</th>
+                </tr>
+                <tr class="table_row">
+                    <td>{{ countGender('M') }}</td>
+                    <td>{{ countGender('F') }}</td>
+                    <td>{{ countAgeRange(18, 24) }}</td>
+                    <td>{{ countAgeRange(25, 39) }}</td>
+                    <td>{{ countAgeRange(40, 59) }}</td>
+                    <td>{{ countAgeRange(60, 999) }}</td>
+                    <td>{{ countCabinType('Economy') }}</td>
+                    <td>{{ countCabinType('Business') }}</td>
+                    <td>{{ countCabinType('First') }}</td>
+                    <td>{{ countAirport('AUH') }}</td>
+                    <td>{{ countAirport('BAH') }}</td>
+                    <td>{{ countAirport('DOH') }}</td>
+                    <td>{{ countAirport('RUH') }}</td>
+                    <td>{{ countAirport('CAI') }}</td>
+                </tr>
+            </table>
         </div>
     </div>
 </template>
 
 <script>
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Row from 'primevue/row';
-import ColumnGroup from 'primevue/columngroup';
-
 import { PATHS } from '../constants';
 
 export default {
     name: 'ReportsSurvey',
-    components: {
-        DataTable,
-        Column,
-        ColumnGroup,
-        Row,
-    },
+
+    created() {
+            this.$store.dispatch('survey/surveys');
+        },
     computed: {
         surveys() {
             return this.$store.state.survey.surveys;
         },
-    },
-    created() {
-        this.$store.dispatch('survey/surveys');
+        fieldworkStartDate() {
+            return this.formatDate(this.surveys[0]?.month);
+        },
+        fieldworkEndDate() {
+            return this.formatDate(this.surveys[this.surveys.length - 1]?.month);
+        }
     },
     methods: {
+        countGender(gender) {
+            return this.surveys.filter(item => item.gender === gender).length;
+        },
+        countAgeRange(min, max) {
+            return this.surveys.filter(item => item.age >= min && item.age <= max).length;
+        },
+        countCabinType(cabinType) {
+            return this.surveys.filter(item => item.cabintype === cabinType).length;
+        },
+        countAirport(airport) {
+            return this.surveys.filter(item => item.arrival === airport).length;
+        },
         logout() {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
         },
-        
+        formatDate(dateString) {
+            if (!dateString) {
+                return "";
+            }
+            const date = new Date(dateString);
+            const options = { year: 'numeric', month: 'long' };
+            return date.toLocaleDateString('en-US', options);
+        },    
     },
 }
 </script>
@@ -191,6 +163,36 @@ export default {
     align-items: center;
     border-bottom: solid 2px;
     margin-bottom: 20px;
+}
+.table {
+    width: 100%;
+    border: 3px solid black;
+    border-collapse: collapse;
+
+    &_header {
+        background: grey;
+        border: 3px solid black;
+        th {
+            text-align: start;
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
+    &_subheader {
+        background: grey;
+        border: 3px solid black;
+        th {
+            text-align: start;
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
+    &_row {
+        td {
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
 }
 
 </style>

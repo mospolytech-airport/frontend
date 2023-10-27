@@ -86,7 +86,6 @@ export default {
 
                         timeSpent = `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
                     }
-                    console.log(userData)
                     userData.push({
                         loginDate,
                         loginTime,
@@ -192,7 +191,6 @@ export default {
 
     &_row {
         td {
-            cursor: pointer;
             padding: 2px;
             border-left: 3px solid black;
         }
