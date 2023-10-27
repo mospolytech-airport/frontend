@@ -7,4 +7,5 @@ export const PATHS = {
     MENUUSER: '/menu-user',
     REGISTER: '/register',
     EDIT: '/edit/:id',
+    SURVEYREPORTS: '/reports-survey',
 };

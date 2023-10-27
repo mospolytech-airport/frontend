@@ -6,6 +6,7 @@ import RegisterPage from './register.vue';
 import AdminMenu from './adminMenu.vue';
 import EditPage from './edit.vue';
 import MenuUserPage from './menuUsers.vue';
+import ReportsSurveyPage from './reportsSurvey.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -46,6 +47,14 @@ const routes = [
     path: PATHS.MENUUSER,
     name: 'MenuUserPage',
     component: MenuUserPage,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: PATHS.SURVEYREPORTS,
+    name: 'ReportsSurveyPage',
+    component: ReportsSurveyPage,
     meta: {
       requiresAuth: true
     }
