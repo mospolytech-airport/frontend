@@ -118,7 +118,7 @@ export default {
 <style lang="scss" scoped>
 .users-menu {
     width: 100vw;
-    height: 100vh;
+    height: 100%;
     border: solid 3px;
 }
 .header-cont {
