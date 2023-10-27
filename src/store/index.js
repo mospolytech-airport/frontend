@@ -2,12 +2,12 @@ import { createStore } from 'vuex';
 
 import { authModule } from './modules/auth';
 import { appsModule } from './modules/apps';
-import { surveyModule } from './modules/surveys';
+import { surveyModule } from './modules/survey';
 
 export const store = createStore({
     modules: {
         auth: authModule,
         apps: appsModule,
-        surveys: surveyModule,
+        survey: surveyModule,
     }
 });

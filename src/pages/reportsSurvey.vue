@@ -19,8 +19,8 @@
         </div>
         <div class="main">
             <div class="user-info">
-                <p>Fieldwork: </p>
-                <p>Sample Size: </p> 
+                <p>Fieldwork: {{  }}</p>
+                <p>Sample Size: {{ surveys?.length }}</p> 
             </div>
             <DataTable
                 :value="surveys"
@@ -65,7 +65,6 @@ import DataTable from 'primevue/datatable';
 import Column from 'primevue/column';
 import Row from 'primevue/row';
 import ColumnGroup from 'primevue/columngroup';
-import { mapGetters } from 'vuex';
 
 import { PATHS } from '../constants';
 
@@ -77,15 +76,20 @@ export default {
         ColumnGroup,
         Row,
     },
+    created() {
+            this.$store.dispatch('survey/surveys');
+        },
     computed: {
-        ...mapGetters('surveys', ['surveys']),
-
+        surveys() {
+            return this.$store.state.survey.surveys;
+        },
     },
     methods: {
         logout() {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
         },
+        
     },
 }
 </script>

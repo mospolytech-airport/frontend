@@ -22,5 +22,7 @@ export const api = {
     }),
     edit: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props }, {
         headers: { Authorization: `Bearer ${token}` }
-    })
+    }),
+    surveys: ({ token }) => instanceApi.get('/survey/', { headers: { Authorization: `Bearer ${token}` } }),
+
 };
