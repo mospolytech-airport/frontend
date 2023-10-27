@@ -87,12 +87,12 @@ export default {
             return users;
         },
         offices() {
-            return this.$store.state.apps.offices;
+            return this.$store.state.office.offices;
         }
     },
     created() {
-        this.$store.dispatch('auth/users', this.user);
-        this.$store.dispatch('apps/offices', this.user);
+        this.$store.dispatch('auth/users');
+        this.$store.dispatch('office/offices');
     },
     methods: {
         logout() {

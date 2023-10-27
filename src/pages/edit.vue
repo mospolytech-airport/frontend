@@ -96,7 +96,7 @@ export default {
     },
     computed: {
         ...mapGetters('auth', ['status']),
-        ...mapGetters('apps', ['offices'])
+        ...mapGetters('office', ['offices'])
     },
     mounted() {
         this.getEditUser();
@@ -118,7 +118,7 @@ export default {
                 });
         },
         getOffices() {
-            this.$store.dispatch('apps/offices');
+            this.$store.dispatch('office/offices');
         },
         apply() {
             this.$store.dispatch('auth/edit', this.editUser);
