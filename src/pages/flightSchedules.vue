@@ -7,7 +7,6 @@
             </button>
         </div>
         <div class="header-button">
-            <button>Add User</button>
             <button @click="logout">
                 Exit
             </button>
