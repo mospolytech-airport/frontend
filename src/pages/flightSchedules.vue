@@ -13,22 +13,85 @@
             </button>
         </div>
         <div class="content">
-            <!-- <div class="filters">
-                <p>Filtered by:</p>
-                <select
-                    v-model="office"
-                    class="office-selector"
-                    placeholder="Choose office"
-                >
-                    <option
-                        v-for="office in offices"
-                        :key="office.id"
-                        :value="office.title"
-                    >
-                        {{ office.title }}
-                    </option>
-                </select>
-            </div> -->
+			<div class="filters">
+				<!-- <p style="position:relative">Filtered by:</p> -->
+				<label>
+					From
+					<select
+						class="filter+"
+						placeholder="Choose office"
+					>
+						<!-- <option
+							v-for="office in offices"
+							:key="office.id"
+							:value="office.title"
+							>
+							{{ office.title }}
+						</option> -->
+					</select>
+				</label>
+				<label>
+					To
+					<select
+						class="filter+"
+						placeholder="Choose office"
+					>
+						<!-- <option
+							v-for="office in offices"
+							:key="office.id"
+							:value="office.title"
+							>
+							{{ office.title }}
+						</option> -->
+					</select>
+				</label>
+				<label>
+					Sort by
+					<select
+						class="filter+"
+						placeholder="Choose office"
+					>
+						<!-- <option
+							v-for="office in offices"
+							:key="office.id"
+							:value="office.title"
+							>
+							{{ office.title }}
+						</option> -->
+					</select>
+				</label>
+				<label>
+					Outbound
+					<select
+						class="filter+"
+						placeholder="Choose office"
+					>
+						<!-- <option
+							v-for="office in offices"
+							:key="office.id"
+							:value="office.title"
+							>
+							{{ office.title }}
+						</option> -->
+					</select>
+				</label>
+				<label>
+					Flight Number
+					<select
+						class="filter+"
+						placeholder="Choose office"
+					>
+						<!-- <option
+							v-for="office in offices"
+							:key="office.id"
+							:value="office.title"
+							>
+							{{ office.title }}
+						</option> -->
+					</select>
+				</label>
+				<button>Apply</button>
+            </div>
             <table class="table">
                 <tr class="table_header">
                     <th>Date</th>
@@ -43,26 +106,29 @@
                 </tr>
                 <tr 
                     class="table_row" 
-                    v-for="({id, date, time, route: {DepartureAirport, ArrivalAirport}, flightNumber, economyPrice, aircraft }) in schedules" :key="id"
+                    v-for="({id, Date, Time, Route: {DepartureAirport, ArrivalAirport}, FlightNumber, EconomyPrice, Aircraft }) in schedules" :key="id"
                 >
-                    <td>{{ editDate(date) }}</td>
-                    <td>{{ time }}</td>
+                    <td>{{ editDate(Date) }}</td>
+                    <td>{{ Time }}</td>
                     <td>{{ DepartureAirport.IATACode }}</td>
                     <td>{{ ArrivalAirport.IATACode }}</td>
-                    <td>{{ flightNumber }}</td>
-                    <td>{{ aircraft.Name }}</td>
-                    <td>${{ Math.round(economyPrice)}}</td>
-                    <td>${{ Math.round(economyPrice * 1.4) }}</td>
-                    <td>${{ Math.round(economyPrice * 1.8) }}</td>
+                    <td>{{ FlightNumber }}</td>
+                    <td>{{ Aircraft.Name }}</td>
+                    <td>${{ Math.round(EconomyPrice)}}</td>
+                    <td>${{ Math.round(EconomyPrice * 1.4) }}</td>
+                    <td>${{ Math.round(EconomyPrice * 1.8) }}</td>
                 </tr>
             </table>
             <div class="buttons">
-                <button @click="changeRole">
-                    Change Role
-                </button>
-                <button @click="toggleUser">
-                    Enable/Disable Login
-                </button>
+				<div style="display: flex; gap: 3rem;">
+					<button>
+						Cancel Flight
+					</button>
+					<button>
+						Edit Flight
+					</button>
+				</div>
+				<button>Import Changes</button>
             </div>	
         </div>
     </main>
@@ -143,6 +209,30 @@ export default {
 .content {
     padding: 0 18px;
 }
+.filters {
+	padding: 1rem 3rem;
+	border: solid 3px;	
+	margin: 1rem 0;
+	display: grid;
+	grid-template: "a a a"
+				   "b b b";
+	justify-items: end;
+	column-gap: 5rem;
+	label {
+		
+		select {
+			width: 5rem;
+		}
+	}
+	button {
+		border: 2ps solid black;
+		border-radius: 0;
+		cursor: pointer;
+		font-size: 16px;
+		background: 0;
+		width: 8rem;
+	}
+}
 .office {
 	display: flex;
 	gap: 1rem;
@@ -150,7 +240,8 @@ export default {
 }
 .buttons {
 	display: flex;
-    margin-top: 1rem;
+	justify-content: space-between;
+    margin: 1rem 0;
 	gap: 4rem;
 	button {
 		border: 2ps solid black;
