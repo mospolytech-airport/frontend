@@ -65,6 +65,8 @@
 </template>
 
 <script>
+import { PATHS } from '../constants';
+
 export default {
     name: 'AdminMenu',
     data() {
