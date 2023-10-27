@@ -39,8 +39,9 @@
                     <th>Office</th>
                 </tr>
                 <tr 
-                    class="table_row" 
-                    v-for="({id, first_name, last_name, birthday, role, email, office, is_active}) in users" :key="id"
+                    v-for="({id, first_name, last_name, birthday, role, email, office, is_active}) in users" 
+                    :key="id"
+                    class="table_row"
                     :class="{ active: id === selectedUser?.id, disabled: !is_active, enabled: is_active}"
                     @click="selectRow(id)"
                 >
@@ -72,8 +73,8 @@ export default {
     data() {
         return {
             office: "",
-			selectedUser: null,
-			isActive: null
+            selectedUser: null,
+            isActive: null
         }  
     },    
     computed: {
@@ -99,7 +100,7 @@ export default {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
         },
-		async toggleUser() {
+        async toggleUser() {
             const email = this.selectedUser.email;
             const is_active = this.selectedUser.is_active === true ? false : true;
             await this.$store.dispatch('auth/editUser', { email, is_active });
@@ -107,11 +108,11 @@ export default {
             this.selectedUser = this.users.find(user => user.id === this.selectedUser.id) 
         },
         async changeRole() {
-			const email = this.selectedUser.email;
-			const role = this.selectedUser.role === "User" ? "Administrator" : "User";
-			await this.$store.dispatch('auth/editUser', { email, role });
+            const email = this.selectedUser.email;
+            const role = this.selectedUser.role === "User" ? "Administrator" : "User";
+            await this.$store.dispatch('auth/editUser', { email, role });
 
-			this.selectedUser = this.users.find(user => user.id === this.selectedUser.id)
+            this.selectedUser = this.users.find(user => user.id === this.selectedUser.id)
         },
         selectRow(id) {
             this.selectedUser = this.users.find(user => user.id === id);

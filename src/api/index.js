@@ -21,5 +21,9 @@ export const api = {
     logout: ({ token, error }) => instanceApi.post('/auth/logout/', { error }, {
         headers: { Authorization: `Bearer ${token}` }
     }),
+    edit: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props }, {
+        headers: { Authorization: `Bearer ${token}` }
+    }),
+    surveys: ({ token }) => instanceApi.get('/survey/', { headers: { Authorization: `Bearer ${token}` } }),
     schedules: ({ token }) => instanceApi.get('/schedules/', { headers: { Authorization: `Bearer ${token}`}})
 };

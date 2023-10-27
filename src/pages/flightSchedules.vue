@@ -12,84 +12,84 @@
             </button>
         </div>
         <div class="content">
-			<div class="filters">
-				<!-- <p style="position:relative">Filtered by:</p> -->
-				<label>
-					From
-					<select
-						class="filter+"
-						placeholder="Choose office"
-					>
-						<!-- <option
+            <div class="filters">
+                <!-- <p style="position:relative">Filtered by:</p> -->
+                <label>
+                    From
+                    <select
+                        class="filter+"
+                        placeholder="Choose office"
+                    >
+                        <!-- <option
 							v-for="office in offices"
 							:key="office.id"
 							:value="office.title"
 							>
 							{{ office.title }}
 						</option> -->
-					</select>
-				</label>
-				<label>
-					To
-					<select
-						class="filter+"
-						placeholder="Choose office"
-					>
-						<!-- <option
+                    </select>
+                </label>
+                <label>
+                    To
+                    <select
+                        class="filter+"
+                        placeholder="Choose office"
+                    >
+                        <!-- <option
 							v-for="office in offices"
 							:key="office.id"
 							:value="office.title"
 							>
 							{{ office.title }}
 						</option> -->
-					</select>
-				</label>
-				<label>
-					Sort by
-					<select
-						class="filter+"
-						placeholder="Choose office"
-					>
-						<!-- <option
+                    </select>
+                </label>
+                <label>
+                    Sort by
+                    <select
+                        class="filter+"
+                        placeholder="Choose office"
+                    >
+                        <!-- <option
 							v-for="office in offices"
 							:key="office.id"
 							:value="office.title"
 							>
 							{{ office.title }}
 						</option> -->
-					</select>
-				</label>
-				<label>
-					Outbound
-					<select
-						class="filter+"
-						placeholder="Choose office"
-					>
-						<!-- <option
+                    </select>
+                </label>
+                <label>
+                    Outbound
+                    <select
+                        class="filter+"
+                        placeholder="Choose office"
+                    >
+                        <!-- <option
 							v-for="office in offices"
 							:key="office.id"
 							:value="office.title"
 							>
 							{{ office.title }}
 						</option> -->
-					</select>
-				</label>
-				<label>
-					Flight Number
-					<select
-						class="filter+"
-						placeholder="Choose office"
-					>
-						<!-- <option
+                    </select>
+                </label>
+                <label>
+                    Flight Number
+                    <select
+                        class="filter+"
+                        placeholder="Choose office"
+                    >
+                        <!-- <option
 							v-for="office in offices"
 							:key="office.id"
 							:value="office.title"
 							>
 							{{ office.title }}
 						</option> -->
-					</select>
-				</label>
-				<button>Apply</button>
+                    </select>
+                </label>
+                <button>Apply</button>
             </div>
             <table class="table">
                 <tr class="table_header">
@@ -104,8 +104,9 @@
                     <th>First class price</th>
                 </tr>
                 <tr 
-                    class="table_row" 
-                    v-for="({id, Date, Time, Route: {DepartureAirport, ArrivalAirport}, FlightNumber, EconomyPrice, Aircraft }) in schedules" :key="id"
+                    v-for="({id, Date, Time, Route: {DepartureAirport, ArrivalAirport}, FlightNumber, EconomyPrice, Aircraft }) in schedules" 
+                    :key="id"
+                    class="table_row"
                 >
                     <td>{{ editDate(Date) }}</td>
                     <td>{{ Time }}</td>
@@ -113,21 +114,21 @@
                     <td>{{ ArrivalAirport.IATACode }}</td>
                     <td>{{ FlightNumber }}</td>
                     <td>{{ Aircraft.Name }}</td>
-                    <td>${{ Math.round(EconomyPrice)}}</td>
+                    <td>${{ Math.round(EconomyPrice) }}</td>
                     <td>${{ Math.round(EconomyPrice * 1.4) }}</td>
                     <td>${{ Math.round(EconomyPrice * 1.8) }}</td>
                 </tr>
             </table>
             <div class="buttons">
-				<div style="display: flex; gap: 3rem;">
-					<button>
-						Cancel Flight
-					</button>
-					<button>
-						Edit Flight
-					</button>
-				</div>
-				<button>Import Changes</button>
+                <div style="display: flex; gap: 3rem;">
+                    <button>
+                        Cancel Flight
+                    </button>
+                    <button>
+                        Edit Flight
+                    </button>
+                </div>
+                <button>Import Changes</button>
             </div>	
         </div>
     </main>
@@ -154,10 +155,10 @@ export default {
         logout() {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
-      	},
+        },
         editDate(date) {
-			const [year, month, day] = date.split('-');
-			return `${day}.${month}.${year}`
+            const [year, month, day] = date.split('-');
+            return `${day}.${month}.${year}`
         }
     }
 }

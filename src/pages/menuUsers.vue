@@ -18,38 +18,38 @@
                 <p>Number of crashes: {{ numberOfCrashes }}</p>
             </div>
         </div>
-        <DataTable
-            :value="userData"
-            table-style="min-width: 50rem"
-        >
-            <Column
-                field="loginDate"
-                header="Date"
-            />
-            <Column
-                field="loginTime"
-                header="Login time"
-            />
-            <Column
-                field="logoutTime"
-                header="Logout time"
-            />
-            <Column
-                field="timeSpent"
-                header="Time spent on system"
-            />
-            <Column
-                field="error"
-                header="Unsuccessful logout reason"
-            />
-        </DataTable>
+        <table class="table">
+            <tr class="table_header">
+                <th>Date</th>
+                <th>Login time</th>
+                <th>Logout time</th>
+                <th>Time spent on system</th>
+                <th>Unsuccessful logout reason</th>
+            </tr>
+            <tr 
+                v-for="({id, loginDate, loginTime, logoutTime, timeSpent, error}) in userData" 
+                :key="id"
+                class="table_row"
+                :class="{ hasError: error !== null }"
+            >
+                <td>{{ loginDate }}</td>
+                <td>{{ loginTime }}</td>
+                <td>
+                    <span v-if="error !== null">**</span>
+                    <span v-else>{{ logoutTime }}</span>
+                </td>
+                <td>
+                    <span v-if="error !== null">**</span>
+                    <span v-else>{{ timeSpent }}</span>
+                </td>
+                <td>{{ error }}</td>
+            </tr>
+        </table>
     </main>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import { format, differenceInMilliseconds, intervalToDuration } from 'date-fns';
 
 import { addZero } from '../utils/add-zero';
@@ -57,10 +57,6 @@ import { PATHS } from '../constants';
 
 export default {
     name: 'MenuUsers',
-    components: {
-        DataTable,
-        Column
-    },
     computed: {
         totalSystemTime() {
             const sumTimeSpent = this.userData.reduce((acc, { timeSpentMs }) => acc + timeSpentMs, 0);
@@ -90,7 +86,7 @@ export default {
 
                         timeSpent = `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
                     }
-
+                    console.log(userData)
                     userData.push({
                         loginDate,
                         loginTime,
@@ -161,4 +157,46 @@ export default {
       cursor: pointer;
     }
 }
+.table {
+    width: 100%;
+    border: 3px solid black;
+    border-collapse: collapse;
+
+    &_header {
+        background: grey;
+        border: 3px solid black;
+        th {
+            text-align: start;
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
+
+    .active {
+        background: rgb(223, 223, 223) !important;
+    }
+
+    .hasError {
+        background-color: red; /* Set the background color to red for rows with errors */
+        color: white; /* You can adjust text color here */
+    }
+
+    .enabled {
+        background: rgb(144, 231, 139);
+    }
+
+    .disabled {
+        background-color: red;
+        color: white; 
+    }
+
+    &_row {
+        td {
+            cursor: pointer;
+            padding: 2px;
+            border-left: 3px solid black;
+        }
+    }
+}
+
 </style>

@@ -15,14 +15,14 @@ export const surveyModule = {
         setSurveys: (state, surveys) => state.surveys = surveys,
     },
     actions: {
-        fetchSurveys: async ({ commit }) => {
+        surveys: async ({ commit }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
 
             const token = cookie.getCookie(ACCESS_TOKEN);
 
             try {
-                const { data } = await api.fetchSurveys({ token });
+                const { data } = await api.surveys({ token });
                 commit('setStatus', 'success');
                 commit('setSurveys', data);
             } catch (error) {
@@ -35,7 +35,6 @@ export const surveyModule = {
     },
     getters: {
         surveys: state => state.surveys,
-        survey: state => surveyId => state.surveys.find(survey => survey.id === surveyId),
         status: state => state.status,
         error: state => state.error,
     }
