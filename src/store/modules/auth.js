@@ -16,7 +16,6 @@ export const authModule = {
         setUser: (state, user) => state.user = user,
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
-        setUsers: (state, users) => state.users = users,
         setOffices: (state, offices) => state.offices = offices,
         setEditUser: (state, editUser) => state.editUser = editUser,
         setUsers: (state, users) => state.users = users,

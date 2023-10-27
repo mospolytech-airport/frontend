@@ -1,71 +1,79 @@
 <template>
-  <main class="register-page">
-    <div class="form">
-      <div class="form__field">
-        <label for="email">Email address:</label>
-        <InputText
-          type="email"
-          v-model="user.email"
-          :style="{ width: '25vw' }"
-          placeholder="Email"
-        />
-      </div>
-      <div class="form__field">
-        <label for="FirstName">First name:</label>
-        <InputText
-          type="text"
-          v-model="user.first_name"
-          :style="{ width: '25vw' }"
-          placeholder="Firstname"
-        />
-      </div>
-      <div class="form__field">
-        <label for="LastName">Last name:</label>
-        <InputText
-          type="text"
-          v-model="user.last_name"
-          :style="{ width: '25vw' }"
-          placeholder="Lastname"
-        />
-      </div>
-      <div class="form__field">
-        <label for="Office">Office</label>
-        <Dropdown
-          v-model="officeId"
-          editable
-          :options="offices"
-          placeholder="Select an Office"
-          :style="{ width: '25vw' }"
-          @change="changeOffice"
-        />
-      </div>
-      <div class="form__field">
-        <label for="birthdate">Birthdate:</label>
-        <InputText
-          type="text"
-          v-model="user.birthday"
-          :style="{ width: '25vw' }"
-          placeholder="yyyy-mm-dd"
-        />
-      </div>
-      <div class="form__field">
-        <label for="password">Password:</label>
-        <InputText
-          type="password"
-          :style="{ width: '25vw' }"
-          placeholder="Password"
-          v-model="user.password"
-        />
-      </div>
-      <div class="form__buttons">
-        <Button @click="save" label="Save" />
-        <Button @click="cancel" label="Cancel" />
-      </div>
-    </div>
-    <template v-if="error">
-      <div class="text error">{{ error }}</div>
-    </template>
-  </main>
+    <main class="register-page">
+        <div class="form">
+            <div class="form__field">
+                <label for="email">Email address:</label>
+                <InputText
+                    v-model="user.email"
+                    type="email"
+                    :style="{ width: '25vw' }"
+                    placeholder="Email"
+                />
+            </div>
+            <div class="form__field">
+                <label for="FirstName">First name:</label>
+                <InputText
+                    v-model="user.first_name"
+                    type="text"
+                    :style="{ width: '25vw' }"
+                    placeholder="Firstname"
+                />
+            </div>
+            <div class="form__field">
+                <label for="LastName">Last name:</label>
+                <InputText
+                    v-model="user.last_name"
+                    type="text"
+                    :style="{ width: '25vw' }"
+                    placeholder="Lastname"
+                />
+            </div>
+            <div class="form__field">
+                <label for="Office">Office</label>
+                <Dropdown
+                    v-model="officeId"
+                    editable
+                    :options="offices"
+                    placeholder="Select an Office"
+                    :style="{ width: '25vw' }"
+                    @change="changeOffice"
+                />
+            </div>
+            <div class="form__field">
+                <label for="birthdate">Birthdate:</label>
+                <InputText
+                    v-model="user.birthday"
+                    type="text"
+                    :style="{ width: '25vw' }"
+                    placeholder="yyyy-mm-dd"
+                />
+            </div>
+            <div class="form__field">
+                <label for="password">Password:</label>
+                <InputText
+                    v-model="user.password"
+                    type="password"
+                    :style="{ width: '25vw' }"
+                    placeholder="Password"
+                />
+            </div>
+            <div class="form__buttons">
+                <Button
+                    label="Save"
+                    @click="save"
+                />
+                <Button
+                    label="Cancel"
+                    @click="cancel"
+                />
+            </div>
+        </div>
+        <template v-if="error">
+            <div class="text error">
+                {{ error }}
+            </div>
+        </template>
+    </main>
 </template>
 
 <script>
@@ -77,73 +85,72 @@ import Calendar from "primevue/calendar";
 import { PATHS } from "../constants";
 
 export default {
-  components: {
-    InputText,
-    Button,
-    Dropdown,
-    Calendar,
-  },
-  data() {
-    return {
-      date: null,
-      officeId: null,
-      user: {
-        email: "",
-        first_name: "",
-        last_name: "",
-        birthday: "",
-        office: null,
-        password: "",
-      },
-    };
-  },
-  methods: {
-    changeOffice() {
-      this.office.forEach((element) => {
-        if (this.officeId === element.title) {
-          this.user.office = element.id
-        }
-      })
+    name: "RegisterPage",
+    components: {
+        InputText,
+        Button,
+        Dropdown,
     },
+    data() {
+        return {
+            date: null,
+            officeId: null,
+            user: {
+                email: "",
+                first_name: "",
+                last_name: "",
+                birthday: "",
+                office: null,
+                password: "",
+            },
+        };
+    },
+    computed: {
+        error() {
+            return this.$store.getters.auth.error;
+        },
+        office() {
+            return this.$store.state.auth.offices;
+        },
+        offices() {
+            let titles = [];
+            this.office.forEach((element) => {
+                titles.push(element.title);
+            });
+            return titles;
+        },
+    },
+    created() {
+        this.$store.dispatch("auth/offices", this.office);
+    },
+    methods: {
+        changeOffice() {
+            this.office.forEach((element) => {
+                if (this.officeId === element.title) {
+                    this.user.office = element.id
+                }
+            })
+        },
 
-    cancel() {
-      this.$router.push(PATHS.LOGIN);
-    },
+        cancel() {
+            this.$router.push(PATHS.LOGIN);
+        },
 
-    save() {
-      const self = this;
+        save() {
+            const self = this;
 
-      self.$store.dispatch("auth/register", this.user).then(() => {
-        self.$router.push(PATHS.HOME);
-      });
+            self.$store.dispatch("auth/register", this.user).then(() => {
+                self.$router.push(PATHS.HOME);
+            });
 
-      self.user.email = "";
-      self.user.first_name = "";
-      self.user.last_name = "";
-      self.user.office = "";
-      self.user.birthday = "";
-      self.user.password = "";
+            self.user.email = "";
+            self.user.first_name = "";
+            self.user.last_name = "";
+            self.user.office = "";
+            self.user.birthday = "";
+            self.user.password = "";
+        },
     },
-  },
-  computed: {
-    error() {
-      return this.$store.getters.auth.error;
-    },
-    office() {
-      return this.$store.state.auth.offices;
-    },
-    offices() {
-      let titles = [];
-      this.office.forEach((element) => {
-        titles.push(element.title);
-      });
-      return titles;
-    },
-  },
-  created() {
-    this.$store.dispatch("auth/offices", this.office);
-  },
-  name: "RegisterPage",
 };
 </script>
 

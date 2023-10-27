@@ -35,7 +35,6 @@ export const surveyModule = {
     },
     getters: {
         surveys: state => state.surveys,
-        survey: state => state.survey,
         status: state => state.status,
         error: state => state.error,
     }
