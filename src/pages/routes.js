@@ -7,6 +7,7 @@ import AdminMenu from './adminMenu.vue';
 import EditPage from './edit.vue';
 import MenuUserPage from './menuUsers.vue';
 import ReportsSurveyPage from './reportsSurvey.vue';
+import FlightSchedules from './flightSchedules.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -63,7 +64,15 @@ const routes = [
     path: PATHS.EDIT,
     name: 'EditPage',
     component: EditPage,
-  }
+  },
+  {
+    path: PATHS.SCHEDULES,
+    name: 'FlightSchedules',
+    component: FlightSchedules,
+    meta: {
+      requiresAuth: true
+    }
+  },
 ];
 
 const router = createRouter({
