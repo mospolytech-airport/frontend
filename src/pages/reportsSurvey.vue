@@ -50,42 +50,31 @@
                     <th>RYU</th>
                     <th>CAI</th>
                 </tr>
-                <!-- Далее идут строки с данными -->
-                <!-- <tr 
+                <tr 
                     class="table_row" 
                     v-for="({id, departure, arrival, age, gender, cabintype, q1,q2,q3,q4 }) in surveys" :key="id"
                 >
                     <td>{{ loginDate }}</td>
                     <td>{{ loginTime }}</td>
                     <td>{{ error }}</td>
-                </tr> -->
+                </tr>
             </table>
         </div>
     </div>
 </template>
 
 <script>
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import Row from 'primevue/row';
-import ColumnGroup from 'primevue/columngroup';
-
 import { PATHS } from '../constants';
 
 export default {
     name: 'ReportsSurvey',
-    components: {
-        DataTable,
-        Column,
-        ColumnGroup,
-        Row,
-    },
+
     created() {
-            this.$store.dispatch('survey/surveys');
+            this.$store.dispatch('surveys/surveys');
         },
     computed: {
         surveys() {
-            return this.$store.state.survey.surveys;
+            return this.$store.state.surveys.surveys;
         },
         fieldworkStartDate() {
             return this.formatDate(this.surveys[0]?.month);
