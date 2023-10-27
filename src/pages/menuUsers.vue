@@ -49,8 +49,6 @@
 
 <script>
 import { mapGetters } from 'vuex';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import { format, differenceInMilliseconds, intervalToDuration } from 'date-fns';
 
 import { addZero } from '../utils/add-zero';
@@ -58,10 +56,6 @@ import { PATHS } from '../constants';
 
 export default {
     name: 'MenuUsers',
-    components: {
-        DataTable,
-        Column
-    },
     computed: {
         totalSystemTime() {
             const sumTimeSpent = this.userData.reduce((acc, { timeSpentMs }) => acc + timeSpentMs, 0);
@@ -197,7 +191,6 @@ export default {
 
     &_row {
         td {
-            cursor: pointer;
             padding: 2px;
             border-left: 3px solid black;
         }
