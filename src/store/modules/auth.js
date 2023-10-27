@@ -20,9 +20,6 @@ export const authModule = {
         setOffices: (state, offices) => state.offices = offices,
         setEditUser: (state, editUser) => state.editUser = editUser,
         setUsers: (state, users) => state.users = users,
-        setUser: (state, editedUser) => state.users = state.users.map(
-            user => user.id === editedUser.id ? editedUser : user
-        )
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
