@@ -7,7 +7,7 @@
             </button>
         </div>
         <div class="header-button">
-            <button>    
+            <button>            
                 <router-link to="/reports-survey">
                 View Results Summary |
                 </router-link>
@@ -23,19 +23,25 @@
         </div>
         <div class="main">
             <div class="user-info">
-                <p>Fieldwork: {{ fieldworkStartDate }} - {{ fieldworkEndDate }}</p>
-                <p>Sample Size: {{ surveys?.length }}</p> 
+                <p>Time period: </p>
+                <select v-model="selectedMonth" class="period-selector">
+                    <option value="">All</option>
+                    <option v-for="month in uniqueMonths" :key="month" :value="month">
+                        {{ formatDate(month) }}
+                    </option>
+                </select>
             </div>
             <table class="table">
-                <!-- Заголовок таблицы -->
                 <tr class="table_header">
+                    <th colspan="1"></th>
                     <th colspan="2">Gender</th>
                     <th colspan="4">Age</th>
                     <th colspan="3">Cabin Type</th>
                     <th colspan="5">Destination Airport</th>
                 </tr>
-                <!-- Субзаголовок таблицы -->
                 <tr class="table_subheader">
+                    <th>Total</th>
+
                     <th>Male</th>
                     <th>Female</th>
 
@@ -55,20 +61,7 @@
                     <th>CAI</th>
                 </tr>
                 <tr class="table_row">
-                    <td>{{ countGender('M') }}</td>
-                    <td>{{ countGender('F') }}</td>
-                    <td>{{ countAgeRange(18, 24) }}</td>
-                    <td>{{ countAgeRange(25, 39) }}</td>
-                    <td>{{ countAgeRange(40, 59) }}</td>
-                    <td>{{ countAgeRange(60, 999) }}</td>
-                    <td>{{ countCabinType('Economy') }}</td>
-                    <td>{{ countCabinType('Business') }}</td>
-                    <td>{{ countCabinType('First') }}</td>
-                    <td>{{ countAirport('AUH') }}</td>
-                    <td>{{ countAirport('BAH') }}</td>
-                    <td>{{ countAirport('DOH') }}</td>
-                    <td>{{ countAirport('RUH') }}</td>
-                    <td>{{ countAirport('CAI') }}</td>
+
                 </tr>
             </table>
         </div>
@@ -76,11 +69,16 @@
 </template>
 
 <script>
-import { PATHS } from '../constants';
+import { PATHS } from '../../constants';
 
 export default {
-    name: 'ReportsSurvey',
-
+    name: 'SurveySummary',
+    data() {
+        return {
+            selectedMonth: "",
+            uniqueMonths: [],
+        };
+    },
     created() {
             this.$store.dispatch('survey/surveys');
         },
@@ -88,12 +86,21 @@ export default {
         surveys() {
             return this.$store.state.survey.surveys;
         },
-        fieldworkStartDate() {
-            return this.formatDate(this.surveys[0]?.month);
+        uniqueMonths() {
+            const months = new Set();
+            this.surveys.forEach(survey => {
+                if (survey.month) {
+                    months.add(survey.month);
+                }
+            });
+            return Array.from(months);
         },
-        fieldworkEndDate() {
-            return this.formatDate(this.surveys[this.surveys.length - 1]?.month);
-        }
+        filteredSurveys() {
+            if (this.selectedMonth) {
+                return this.surveys.filter(survey => survey.month === this.selectedMonth);
+            }
+            return this.surveys;
+        },
     },
     methods: {
         countGender(gender) {
@@ -163,16 +170,14 @@ export default {
 }
 .user-info {
     display: flex;
-    justify-content: space-between;
+    justify-content: flex-end;
     align-items: center;
-    border-bottom: solid 2px;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
 }
 .table {
     width: 100%;
     border: 3px solid black;
     border-collapse: collapse;
-
     &_header {
         background: grey;
         border: 3px solid black;
@@ -197,6 +202,26 @@ export default {
             border-left: 3px solid black;
         }
     }
+
+
 }
+// .table_under {
+//     display: flex;
+//     justify-content: space-between;
+//     align-items: center;
+//     max-width: 780px;
+//     color: grey;
+//     }
+// caption {
+//   padding: 20px;
+//   caption-side: bottom;
+// }
+// .square {
+//   width: 10px;
+//   height: 10px;
+//   background-color: green;
+//   display: inline-block;
+//   margin-right: 5px;
+// }
 
 </style>

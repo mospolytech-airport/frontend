@@ -8,6 +8,7 @@ import EditPage from './edit.vue';
 import MenuUserPage from './menuUsers.vue';
 import ReportsSurveyPage from './reportsSurvey.vue';
 import FlightSchedules from './flightSchedules.vue';
+import SurveyDetailPage from './survey/surveyDetail.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -56,6 +57,14 @@ const routes = [
     path: PATHS.SURVEYREPORTS,
     name: 'ReportsSurveyPage',
     component: ReportsSurveyPage,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: PATHS.SURVEYDETAIL,
+    name: 'SurveyDetailPage',
+    component: SurveyDetailPage,
     meta: {
       requiresAuth: true
     }
