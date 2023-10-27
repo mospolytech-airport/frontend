@@ -8,7 +8,8 @@ const instanceApi = axios.create({
 
 export const api = {
     login: ({ username, password }) => instanceApi.post('/auth/login/', { email: username, password }),
-    register: ({ email, first_name, last_name, office, birthday, password }) => instanceApi.post('/auth/register/', { email, first_name, last_name, office, birthday, password }),
+    register: ({ email, first_name, last_name, office, birthday, password }) =>
+        instanceApi.post('/auth/register/', { email, first_name, last_name, office, birthday, password }),
     me: ({ token }) => instanceApi.get('/auth/me/', { headers: { Authorization: `Bearer ${token}` } }),
     editUser: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props },
         { headers: { Authorization: `Bearer ${token}` } }
@@ -20,7 +21,5 @@ export const api = {
     logout: ({ token, error }) => instanceApi.post('/auth/logout/', { error }, {
         headers: { Authorization: `Bearer ${token}` }
     }),
-    edit: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props }, {
-        headers: { Authorization: `Bearer ${token}` }
-    })
+    schedules: ({ token }) => instanceApi.get('/schedules/', { headers: { Authorization: `Bearer ${token}`}})
 };

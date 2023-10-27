@@ -8,4 +8,5 @@ export const PATHS = {
     REGISTER: '/register',
     EDIT: '/edit/:id',
     SURVEYREPORTS: '/reports-survey',
+    SCHEDULES: '/schedules'
 };
