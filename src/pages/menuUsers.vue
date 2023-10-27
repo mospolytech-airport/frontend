@@ -18,39 +18,38 @@
                 <p>Number of crashes: {{ numberOfCrashes }}</p>
             </div>
         </div>
-            <table class="table">
-                <tr class="table_header">
-                    <th>Date</th>
-                    <th>Login time</th>
-                    <th>Logout time</th>
-                    <th>Time spent on system</th>
-                    <th>Unsuccessful logout reason</th>
-                </tr>
-                <tr 
-                    class="table_row" 
-                    v-for="({id, loginDate, loginTime, logoutTime, timeSpent, error}) in userData" :key="id"
-                    :class="{ hasError: error !== null }"
-                >
-                    <td>{{ loginDate }}</td>
-                    <td>{{ loginTime }}</td>
-                    <td>
-                      <span v-if="error !== null">**</span>
-                      <span v-else>{{ logoutTime }}</span>
-                    </td>
-                    <td>
-                      <span v-if="error !== null">**</span>
-                      <span v-else>{{ timeSpent }}</span>
-                    </td>
-                    <td>{{ error }}</td>
-                </tr>
-            </table>
+        <table class="table">
+            <tr class="table_header">
+                <th>Date</th>
+                <th>Login time</th>
+                <th>Logout time</th>
+                <th>Time spent on system</th>
+                <th>Unsuccessful logout reason</th>
+            </tr>
+            <tr 
+                v-for="({id, loginDate, loginTime, logoutTime, timeSpent, error}) in userData" 
+                :key="id"
+                class="table_row"
+                :class="{ hasError: error !== null }"
+            >
+                <td>{{ loginDate }}</td>
+                <td>{{ loginTime }}</td>
+                <td>
+                    <span v-if="error !== null">**</span>
+                    <span v-else>{{ logoutTime }}</span>
+                </td>
+                <td>
+                    <span v-if="error !== null">**</span>
+                    <span v-else>{{ timeSpent }}</span>
+                </td>
+                <td>{{ error }}</td>
+            </tr>
+        </table>
     </main>
 </template>
 
 <script>
 import { mapGetters } from 'vuex';
-import DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
 import { format, differenceInMilliseconds, intervalToDuration } from 'date-fns';
 
 import { addZero } from '../utils/add-zero';
@@ -58,10 +57,6 @@ import { PATHS } from '../constants';
 
 export default {
     name: 'MenuUsers',
-    components: {
-        DataTable,
-        Column
-    },
     computed: {
         totalSystemTime() {
             const sumTimeSpent = this.userData.reduce((acc, { timeSpentMs }) => acc + timeSpentMs, 0);

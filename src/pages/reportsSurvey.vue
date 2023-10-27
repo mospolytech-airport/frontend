@@ -19,42 +19,96 @@
         </div>
         <div class="main">
             <div class="user-info">
-                <p>Fieldwork: {{  }}</p>
+                <p>Fieldwork: {{ }}</p>
                 <p>Sample Size: {{ surveys?.length }}</p> 
             </div>
             <DataTable
                 :value="surveys"
                 table-style="min-width: 50rem"
-                showGridlines
+                show-gridlines
                 class="table"
             >
-            <ColumnGroup type="header" >
-                <Row>
-                    <Column header="Gender" :colspan="2" />
-                    <Column header="Age" :colspan="4" />
-                    <Column header="Cabin Type" :colspan="3" />
-                    <Column header="Destination Airport" :colspan="5" />
-                </Row>
-                <Row>
-                    <Column header="Male" field="" />
-                    <Column header="Female" field="femaleCount" />
+                <ColumnGroup type="header">
+                    <Row>
+                        <Column
+                            header="Gender"
+                            :colspan="2"
+                        />
+                        <Column
+                            header="Age"
+                            :colspan="4"
+                        />
+                        <Column
+                            header="Cabin Type"
+                            :colspan="3"
+                        />
+                        <Column
+                            header="Destination Airport"
+                            :colspan="5"
+                        />
+                    </Row>
+                    <Row>
+                        <Column
+                            header="Male"
+                            field=""
+                        />
+                        <Column
+                            header="Female"
+                            field="femaleCount"
+                        />
 
-                    <Column header="18-24" field="" />
-                    <Column header="25-39" field="" />
-                    <Column header="40-59" field="" />
-                    <Column header="60+" field="" />
+                        <Column
+                            header="18-24"
+                            field=""
+                        />
+                        <Column
+                            header="25-39"
+                            field=""
+                        />
+                        <Column
+                            header="40-59"
+                            field=""
+                        />
+                        <Column
+                            header="60+"
+                            field=""
+                        />
 
-                    <Column header="Economy" field="" />
-                    <Column header="Business" field="" />
-                    <Column header="First" field="" />
+                        <Column
+                            header="Economy"
+                            field=""
+                        />
+                        <Column
+                            header="Business"
+                            field=""
+                        />
+                        <Column
+                            header="First"
+                            field=""
+                        />
 
-                    <Column header="AUH" field="" />
-                    <Column header="BAH" field="" />
-                    <Column header="DOH" field="" />
-                    <Column header="RYU" field="" />
-                    <Column header="CAI" field="" />
-                </Row>
-            </ColumnGroup>
+                        <Column
+                            header="AUH"
+                            field=""
+                        />
+                        <Column
+                            header="BAH"
+                            field=""
+                        />
+                        <Column
+                            header="DOH"
+                            field=""
+                        />
+                        <Column
+                            header="RYU"
+                            field=""
+                        />
+                        <Column
+                            header="CAI"
+                            field=""
+                        />
+                    </Row>
+                </ColumnGroup>
             </DataTable>
         </div>
     </div>
@@ -76,13 +130,13 @@ export default {
         ColumnGroup,
         Row,
     },
-    created() {
-            this.$store.dispatch('survey/surveys');
-        },
     computed: {
         surveys() {
             return this.$store.state.survey.surveys;
         },
+    },
+    created() {
+        this.$store.dispatch('survey/surveys');
     },
     methods: {
         logout() {
