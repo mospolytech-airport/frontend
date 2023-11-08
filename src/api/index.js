@@ -25,5 +25,6 @@ export const api = {
         headers: { Authorization: `Bearer ${token}` }
     }),
     surveys: ({ token }) => instanceApi.get('/survey/', { headers: { Authorization: `Bearer ${token}` } }),
-    schedules: ({ token }) => instanceApi.get('/schedules/', { headers: { Authorization: `Bearer ${token}`}})
+    schedules: ({ token }) => instanceApi.get('/schedules/', { headers: { Authorization: `Bearer ${token}` } }),
+    airports: ({ token }) => instanceApi.get('/airport/', { headers: { Authorization: `Bearer ${token}` } })
 };

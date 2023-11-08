@@ -14,80 +14,79 @@
         <div class="content">
             <div class="filters">
                 <!-- <p style="position:relative">Filtered by:</p> -->
-                <label>
+                <label style="position: relative;">
                     From
-                    <select
-                        class="filter+"
-                        placeholder="Choose office"
-                    >
-                        <!-- <option
-							v-for="office in offices"
-							:key="office.id"
-							:value="office.title"
-							>
-							{{ office.title }}
-						</option> -->
-                    </select>
-                </label>
-                <label>
+                    <select class="filter" v-model="from">
+                        <option
+                        v-for="{IATACode}, key in airports"
+                        :key="key"
+                        :value="IATACode"
+                        >
+                        {{ IATACode }}
+                    </option>
+                </select>
+                <span class="clear-button" style="position:" v-if="from" @click="removeFilter('from')">x</span>
+            </label>
+                <label style="position: relative;">
                     To
-                    <select
-                        class="filter+"
-                        placeholder="Choose office"
-                    >
-                        <!-- <option
-							v-for="office in offices"
-							:key="office.id"
-							:value="office.title"
+                    <select class="filter" v-model="to">
+                        <option
+							v-for="{IATACode}, key in airports"
+							:key="key"
+							:value="IATACode"
 							>
-							{{ office.title }}
-						</option> -->
+							{{ IATACode }}
+						</option>
                     </select>
+                    <span class="clear-button" v-if="to" @click="removeFilter('to')">x</span>
                 </label>
-                <label>
+                <label style="position: relative;">
                     Sort by
                     <select
-                        class="filter+"
-                        placeholder="Choose office"
+                        class="filter"
+                        v-model="sort"
                     >
-                        <!-- <option
-							v-for="office in offices"
-							:key="office.id"
-							:value="office.title"
+                        <option
+							v-for="item, key in sortBy"
+							:key="key"
+							:value="item"
 							>
-							{{ office.title }}
-						</option> -->
+							{{ item }}
+						</option>
                     </select>
+                    <span class="clear-button" v-if="sort" @click="removeFilter('sort')">x</span>
                 </label>
-                <label>
+                <label style="position: relative;">
                     Outbound
                     <select
-                        class="filter+"
-                        placeholder="Choose office"
+                        class="filter"
+                        v-model="outbound"
                     >
-                        <!-- <option
-							v-for="office in offices"
-							:key="office.id"
-							:value="office.title"
+                        <option
+							v-for="outbound, key in outbounds"
+							:key="key"
+							:value="outbound"
 							>
-							{{ office.title }}
-						</option> -->
+							{{ outbound }}
+						</option>
                     </select>
+                    <span class="clear-button" v-if="outbound" @click="removeFilter('outbound')">x</span>
                 </label>
-                <label>
+                <label style="position: relative;">
                     Flight Number
                     <select
-                        class="filter+"
-                        placeholder="Choose office"
+                        class="filter"
+                        v-model="flightNumber"
                     >
-                        <!-- <option
-							v-for="office in offices"
-							:key="office.id"
-							:value="office.title"
+                        <option
+							v-for="flightNumber, key in flightNumbers"
+							:key="key"
+							:value="flightNumber"
 							>
-							{{ office.title }}
-						</option> -->
+							{{ flightNumber }}
+						</option>
                     </select>
+                    <span class="clear-button" v-if="flightNumber" @click="removeFilter('flightNumber')">x</span>
                 </label>
                 <button>Apply</button>
             </div>
@@ -141,15 +140,43 @@ export default {
     name: 'FlightSchedules',
     data() {
         return {
+            from: '',
+            to: '',
+            outbound: '',
+            flightNumber: '',
+            sort: ''
         }  
     },    
     computed: {
         schedules() {
             return this.$store.state.schedule.schedules;
+        },
+        airports() {
+            return this.$store.state.airport.airports;
+        },
+        outbounds() {
+            const outbounds = this.schedules.map(item => item.Date);
+            return new Set(outbounds);
+        },
+        flightNumbers() {
+            const numbers = this.schedules.map(item => item.FlightNumber);
+            return new Set(numbers);
+        },
+        sortBy() {
+            return ["Date",
+                    "Time",
+                    "From",
+                    "To",
+                    "Flight Number",
+                    "Aircraft",
+                    "Economy price",
+                    "Business price",
+                    "First class price"]
         }
     },
     created() {
-        this.$store.dispatch('schedule/schedules', this.user);
+        this.$store.dispatch('schedule/schedules');
+        this.$store.dispatch('airport/airports');
     },
     methods: {
         logout() {
@@ -159,6 +186,9 @@ export default {
         editDate(date) {
             const [year, month, day] = date.split('-');
             return `${day}.${month}.${year}`
+        },
+        removeFilter(field) {
+            this[field] = "";
         }
     }
 }
@@ -252,6 +282,12 @@ export default {
 	}
 }
 
+.clear-button {
+    position: absolute;
+    right: 16px;
+    top: -1px;
+    cursor: pointer;
+}
 .table {
     width: 100%;
     border: 3px solid black;
