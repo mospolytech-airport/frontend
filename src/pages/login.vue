@@ -29,8 +29,8 @@
                             @click="login"
                         />
                         <Button
-                            label="Register"
-                            @click="register"
+                            label="Exit"
+                            @click="exit"
                         />
                     </div>
                 </form>
@@ -68,8 +68,7 @@ export default {
         },
     },
     methods: {
-        register() {
-            this.$router.push(PATHS.REGISTER);
+        exit() {
         },
         login() {
             const self = this;

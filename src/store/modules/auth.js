@@ -155,23 +155,13 @@ export const authModule = {
                 }
             }
         },
-        register: async ({ commit }, { email, first_name, last_name, office, birthday, password }) => {
+        register: async ({ commit }, user) => {
             commit('setStatus', 'loading');
             commit('setError', null);
             try {
-                const { data: { access, data } } = await api.register({
-                    email,
-                    first_name,
-                    last_name,
-                    office,
-                    birthday,
-                    password
-                });
-
-                cookie.setCookie(ACCESS_TOKEN, access);
+                await api.register(user);
 
                 commit('setStatus', 'success');
-                commit('setUser', data);
             } catch (error) {
                 if (error instanceof Error) {
                     commit('setStatus', 'error');
