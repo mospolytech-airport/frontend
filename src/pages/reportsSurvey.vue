@@ -9,12 +9,12 @@
         <div class="header-button">
             <button>    
                 <router-link to="/reports-survey">
-                View Results Summary |
+                    View Results Summary |
                 </router-link>
             </button>
             <button>            
                 <router-link to="/reports-survey/detail">
-                View Detailed Results |
+                    View Detailed Results |
                 </router-link>
             </button>
             <button @click="logout">
@@ -29,10 +29,18 @@
             <table class="table">
                 <!-- Заголовок таблицы -->
                 <tr class="table_header">
-                    <th colspan="2">Gender</th>
-                    <th colspan="4">Age</th>
-                    <th colspan="3">Cabin Type</th>
-                    <th colspan="5">Destination Airport</th>
+                    <th colspan="2">
+                        Gender
+                    </th>
+                    <th colspan="4">
+                        Age
+                    </th>
+                    <th colspan="3">
+                        Cabin Type
+                    </th>
+                    <th colspan="5">
+                        Destination Airport
+                    </th>
                 </tr>
                 <!-- Субзаголовок таблицы -->
                 <tr class="table_subheader">
@@ -80,10 +88,6 @@ import { PATHS } from '../constants';
 
 export default {
     name: 'ReportsSurvey',
-
-    created() {
-            this.$store.dispatch('survey/surveys');
-        },
     computed: {
         surveys() {
             return this.$store.state.survey.surveys;
@@ -94,6 +98,10 @@ export default {
         fieldworkEndDate() {
             return this.formatDate(this.surveys[this.surveys.length - 1]?.month);
         }
+    },
+
+    created() {
+        this.$store.dispatch('survey/surveys');
     },
     methods: {
         countGender(gender) {

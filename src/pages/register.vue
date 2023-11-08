@@ -80,7 +80,6 @@
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
-import Calendar from "primevue/calendar";
 
 import { PATHS } from "../constants";
 
@@ -114,9 +113,11 @@ export default {
         },
         offices() {
             let titles = [];
+
             this.office.forEach((element) => {
                 titles.push(element.title);
             });
+
             return titles;
         },
     },
