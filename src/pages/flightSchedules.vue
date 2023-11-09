@@ -227,8 +227,13 @@ export default {
         selectRow(id) {
             this.selectedRow = this.schedules.find(item => item.id === id);
         },
-        cancelFlight() {
-            this.$store.dispatch('schedule/cancelFlight', this.selectedRow.id);
+        async cancelFlight() {
+            try {
+                await this.$store.dispatch('schedule/cancelFlight', this.selectedRow.id);
+            } catch (e) {
+                console.log(e)
+            }
+            this.selectedRow.Confirmed = false;
         }
     }
 }

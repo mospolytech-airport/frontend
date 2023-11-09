@@ -12,12 +12,6 @@ export const scheduleModule = {
     mutations: {
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
-        setSchedule: (state, schedule) => state.setSchedules = state.setSchedules.map(item => {
-            if (item.id === schedule.id) {
-                return schedule;
-            }
-            return item;
-        }),
         setSchedules: (state, schedules) => state.schedules = schedules,
     },
     actions: {
@@ -47,7 +41,6 @@ export const scheduleModule = {
             try {
                 const { data } = await api.cancelFlight({ token, id });
                 commit('setStatus','success');
-                commit('setSchedule', data);
             } catch (error) {
                 if (error instanceof Error) {
                     commit('setStatus', 'error');
