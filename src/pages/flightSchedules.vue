@@ -16,25 +16,27 @@
                 <!-- <p style="position:relative">Filtered by:</p> -->
                 <label style="position: relative;">
                     From
-                    <select class="filter" v-model="from">
+                    <select class="filter" v-model="from" @change="selectFilter">
                         <option
-                        v-for="{IATACode}, key in airports"
-                        :key="key"
-                        :value="IATACode"
+                            v-for="{IATACode}, key in airports"
+                            :key="key"
+                            :value="IATACode"
+                            :disabled="to === IATACode"
                         >
-                        {{ IATACode }}
-                    </option>
-                </select>
-                <span class="clear-button" style="position:" v-if="from" @click="removeFilter('from')">x</span>
-            </label>
+                            {{ IATACode }}
+                        </option>
+                    </select>
+                    <span class="clear-button" style="position:" v-if="from" @click="removeFilter('from')">x</span>
+                </label>
                 <label style="position: relative;">
                     To
-                    <select class="filter" v-model="to">
+                    <select class="filter" v-model="to"  @change="selectFilter">
                         <option
 							v-for="{IATACode}, key in airports"
 							:key="key"
 							:value="IATACode"
-							>
+                            :disabled="from === IATACode"
+						>
 							{{ IATACode }}
 						</option>
                     </select>
@@ -47,45 +49,32 @@
                         v-model="sort"
                     >
                         <option
-							v-for="item, key in sortBy"
+							v-for="name, key in sortBy"
 							:key="key"
-							:value="item"
-							>
-							{{ item }}
+							:value="name"
+						>
+							{{ name }}
 						</option>
                     </select>
-                    <span class="clear-button" v-if="sort" @click="removeFilter('sort')">x</span>
+                    <span class="clear-button" v-if="sort" @click="sort = sortBy[0]">x</span>
                 </label>
                 <label style="position: relative;">
                     Outbound
-                    <select
+                    <input
                         class="filter"
                         v-model="outbound"
-                    >
-                        <option
-							v-for="outbound, key in outbounds"
-							:key="key"
-							:value="outbound"
-							>
-							{{ outbound }}
-						</option>
-                    </select>
+                        placeholder="dd.mm.yyyy"
+                    />
+                        
                     <span class="clear-button" v-if="outbound" @click="removeFilter('outbound')">x</span>
                 </label>
                 <label style="position: relative;">
                     Flight Number
-                    <select
+                    <input
                         class="filter"
                         v-model="flightNumber"
-                    >
-                        <option
-							v-for="flightNumber, key in flightNumbers"
-							:key="key"
-							:value="flightNumber"
-							>
-							{{ flightNumber }}
-						</option>
-                    </select>
+                        placeholder="xxxx"
+                    />
                     <span class="clear-button" v-if="flightNumber" @click="removeFilter('flightNumber')">x</span>
                 </label>
                 <button>Apply</button>
@@ -103,9 +92,11 @@
                     <th>First class price</th>
                 </tr>
                 <tr 
-                    v-for="({id, Date, Time, Route: {DepartureAirport, ArrivalAirport}, FlightNumber, EconomyPrice, Aircraft }) in schedules" 
+                    v-for="({Confirmed, id, Date, Time, Route: {DepartureAirport, ArrivalAirport}, FlightNumber, EconomyPrice, Aircraft }) in schedules" 
                     :key="id"
                     class="table_row"
+                    :class="{ active: id === selectedRow?.id, disabled: !Confirmed}"
+                    @click="selectRow(id)"
                 >
                     <td>{{ editDate(Date) }}</td>
                     <td>{{ Time }}</td>
@@ -120,7 +111,7 @@
             </table>
             <div class="buttons">
                 <div style="display: flex; gap: 3rem;">
-                    <button>
+                    <button @click="cancelFlight">
                         Cancel Flight
                     </button>
                     <button>
@@ -140,27 +131,72 @@ export default {
     name: 'FlightSchedules',
     data() {
         return {
+            selectedRow: null,
             from: '',
             to: '',
             outbound: '',
             flightNumber: '',
-            sort: ''
+            sort: "Date"
         }  
     },    
     computed: {
         schedules() {
-            return this.$store.state.schedule.schedules;
+            // я надеюсь, что это никто не увидит (времени было мало)
+            let schedules = this.$store.state.schedule.schedules;
+
+            if (this.from) {
+                schedules = schedules.filter(item => item.Route.DepartureAirport.IATACode === this.from)
+            }
+            if (this.to) {
+                schedules = schedules.filter(item => item.Route.ArrivalAirport.IATACode === this.to)
+            }
+            if (this.outbound) {
+                schedules = schedules.filter(item => this.editDate(item.Date).includes(this.outbound))
+            }
+            if (this.flightNumber) {
+                schedules = schedules.filter(item => item.FlightNumber === this.flightNumber)
+            }
+            switch (this.sort) {
+                case "From":
+                    return schedules.sort((a, b) => {
+                        if (a.Route.DepartureAirport.IATACode < b.Route.DepartureAirport.IATACode) return -1;
+                        if (a.Route.DepartureAirport.IATACode > b.Route.DepartureAirport.IATACode) return 1;
+                    })  
+                case "To":
+                    return schedules.sort((a, b) => {
+                        if (a.Route.ArrivalAirport.IATACode < b.Route.ArrivalAirport.IATACode) return -1;
+                        if (a.Route.ArrivalAirport.IATACode > b.Route.ArrivalAirport.IATACode) return 1;
+                    })  
+                case "Aircraft":
+                    return schedules.sort((a, b) => {
+                        if (a.Aircraft.Name < b.Aircraft.Name) return -1;
+                        if (a.Aircraft.Name > b.Aircraft.Name) return 1;
+                    })  
+                case "Economy Price":
+                    return schedules.sort((a, b) => {
+                        if (~~a.EconomyPrice < ~~b.EconomyPrice) return -1;
+                        if (~~a.EconomyPrice > ~~b.EconomyPrice) return 1;
+                    })  
+                case "Flight Number":
+                    return schedules.sort((a, b) => {
+                        if (~~a.FlightNumber < ~~b.FlightNumber) return -1;
+                        if (~~a.FlightNumber > ~~b.FlightNumber) return 1;
+                    })  
+                case "Time":
+                    return schedules.sort((a, b) => {
+                        if (a.Time < b.Time) return -1;
+                        if (a.Time > b.Time) return 1;
+                    }) 
+                default:
+                    return schedules.sort((a, b) => {
+                        if (a.Date < b.Date) return -1;
+                        if (a.Date > b.Date) return 1;
+                    })
+            }
         },
         airports() {
-            return this.$store.state.airport.airports;
-        },
-        outbounds() {
-            const outbounds = this.schedules.map(item => item.Date);
-            return new Set(outbounds);
-        },
-        flightNumbers() {
-            const numbers = this.schedules.map(item => item.FlightNumber);
-            return new Set(numbers);
+            let airports = this.$store.state.airport.airports;
+            return airports;
         },
         sortBy() {
             return ["Date",
@@ -169,9 +205,7 @@ export default {
                     "To",
                     "Flight Number",
                     "Aircraft",
-                    "Economy price",
-                    "Business price",
-                    "First class price"]
+                    "Economy Price"]
         }
     },
     created() {
@@ -188,7 +222,13 @@ export default {
             return `${day}.${month}.${year}`
         },
         removeFilter(field) {
-            this[field] = "";
+            this[field] = null;
+        },
+        selectRow(id) {
+            this.selectedRow = this.schedules.find(item => item.id === id);
+        },
+        cancelFlight() {
+            this.$store.dispatch('schedule/cancelFlight', this.selectedRow.id);
         }
     }
 }
@@ -248,10 +288,12 @@ export default {
 				   "b b b";
 	justify-items: end;
 	column-gap: 5rem;
+    row-gap: 1rem;
 	label {
 		
-		select {
-			width: 5rem;
+		.filter {
+			width: 10rem;
+            height: 23.5px;
 		}
 	}
 	button {
@@ -318,5 +360,15 @@ export default {
             border-left: 3px solid black;
         }
     }
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
 }
 </style>

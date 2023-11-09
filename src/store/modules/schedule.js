@@ -12,6 +12,12 @@ export const scheduleModule = {
     mutations: {
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
+        setSchedule: (state, schedule) => state.setSchedules = state.setSchedules.map(item => {
+            if (item.id === schedule.id) {
+                return schedule;
+            }
+            return item;
+        }),
         setSchedules: (state, schedules) => state.schedules = schedules,
     },
     actions: {
@@ -31,7 +37,24 @@ export const scheduleModule = {
                     commit('setError', error.message);
                 }
             }
-      },
+        },
+        cancelFlight: async ({ commit }, id) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
+            try {
+                const { data } = await api.cancelFlight({ token, id });
+                commit('setStatus','success');
+                commit('setSchedule', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        }
     },
     getters: {
       schedules: state => state.schedules,

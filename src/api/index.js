@@ -26,5 +26,6 @@ export const api = {
     }),
     surveys: ({ token }) => instanceApi.get('/survey/', { headers: { Authorization: `Bearer ${token}` } }),
     schedules: ({ token }) => instanceApi.get('/schedules/', { headers: { Authorization: `Bearer ${token}` } }),
-    airports: ({ token }) => instanceApi.get('/airport/', { headers: { Authorization: `Bearer ${token}` } })
+    airports: ({ token }) => instanceApi.get('/airport/', { headers: { Authorization: `Bearer ${token}` } }),
+    cancelFlight: ({ token, id }) => instanceApi.patch(`/schedules/${id}/`, { Confirmed: false }, { headers: { Authorization: `Bearer ${token}` } })
 };

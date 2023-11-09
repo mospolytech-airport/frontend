@@ -31,7 +31,7 @@ export const airportModule = {
                     commit('setError', error.message);
                 }
             }
-      },
+        }
     },
     getters: {
       airports: state => state.airports,
