@@ -31,6 +31,46 @@
                     </option>
                 </select>
             </div>
+            <div class="tables">
+                <table class="table_q">
+                    <tr class="table_header_q">
+                        <th colspan="1"></th>
+                    </tr>
+                    <!-- <tr class="table_row_q">
+                        <td class="questions">Please rate our aircraft flown on AMONIC Airlines</td>
+                        <td>Outstanding</td>
+                        <td>Very GoodGood</td>
+                        <td>Good</td>
+                        <td>Adequate</td>
+                        <td>Needs Improvement</td>
+                        <td>Poor</td>
+                        <td>Don't know</td>
+                        <td class="questions">How would you rate our flight attendants</td>
+                        <td>Outstanding</td>
+                        <td>Very GoodGood</td>
+                        <td>Good</td>
+                        <td>Adequate</td>
+                        <td>Needs Improvement</td>
+                        <td>Poor</td>
+                        <td>Don't know</td>
+                        <td class="questions">How would you rate our inflight entertainment</td>
+                        <td>Outstanding</td>
+                        <td>Very GoodGood</td>
+                        <td>Good</td>
+                        <td>Adequate</td>
+                        <td>Needs Improvement</td>
+                        <td>Poor</td>
+                        <td>Don't know</td>
+                        <td class="questions">Please rate the ticket price for the trip you are taking</td>
+                        <td>Outstanding</td>
+                        <td>Very GoodGood</td>
+                        <td>Good</td>
+                        <td>Adequate</td>
+                        <td>Needs Improvement</td>
+                        <td>Poor</td>
+                        <td>Don't know</td>
+                    </tr> -->
+                </table>
             <table class="table">
                 <tr class="table_header">
                     <th colspan="1"></th>
@@ -40,6 +80,7 @@
                     <th colspan="5">Destination Airport</th>
                 </tr>
                 <tr class="table_subheader">
+
                     <th>Total</th>
 
                     <th>Male</th>
@@ -60,10 +101,19 @@
                     <th>RUH</th>
                     <th>CAI</th>
                 </tr>
-                <tr class="table_row">
-
-                </tr>
+                <tr 
+                    v-for="({id, loginDate, loginTime, logoutTime, timeSpent, error}) in countQuestions" 
+                    :key="id"
+                    class="table_row"
+            >
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td></td>
+            </tr>
             </table>
+        </div>
         </div>
     </div>
 </template>
@@ -100,7 +150,7 @@ export default {
                 return this.surveys.filter(survey => survey.month === this.selectedMonth);
             }
             return this.surveys;
-        },
+        },  
     },
     methods: {
         countGender(gender) {
@@ -132,6 +182,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+.question_column {
+  text-align: left;
+}
+
+.answer_column {
+  text-align: right;
+}
 .users-menu {
     width: 100vw;
     height: 100vh;
@@ -174,6 +231,10 @@ export default {
     align-items: center;
     margin-bottom: 10px;
 }
+.tables {
+    display: flex;
+    justify-content: space-between;
+}
 .table {
     width: 100%;
     border: 3px solid black;
@@ -203,6 +264,22 @@ export default {
         }
     }
 
+}
+.table_q {
+    width: 100%;
+    border-collapse: collapse;
+    &_header_q {
+        th {
+            text-align: start;
+            padding: 2px;
+        }
+    }
+    &_row_q {
+        display: flex;
+        td {
+            padding: 2px;
+        }
+    }
 
 }
 // .table_under {
