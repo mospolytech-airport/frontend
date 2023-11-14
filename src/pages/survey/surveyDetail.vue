@@ -9,12 +9,12 @@
         <div class="header-button">
             <button>            
                 <router-link to="/reports-survey">
-                View Results Summary |
+                    View Results Summary |
                 </router-link>
             </button>
             <button>            
                 <router-link to="/reports-survey/detail">
-                View Detailed Results |
+                    View Detailed Results |
                 </router-link>
             </button>
             <button @click="logout">
@@ -24,9 +24,18 @@
         <div class="main">
             <div class="user-info">
                 <p>Time period: </p>
-                <select v-model="selectedMonth" class="period-selector">
-                    <option value="">All</option>
-                    <option v-for="month in uniqueMonths" :key="month" :value="month">
+                <select
+                    v-model="selectedMonth"
+                    class="period-selector"
+                >
+                    <option value="">
+                        All
+                    </option>
+                    <option
+                        v-for="month in uniqueMonths"
+                        :key="month"
+                        :value="month"
+                    >
                         {{ formatDate(month) }}
                     </option>
                 </select>
@@ -73,11 +82,19 @@
                 </table>
             <table class="table">
                 <tr class="table_header">
-                    <th colspan="1"></th>
-                    <th colspan="2">Gender</th>
-                    <th colspan="4">Age</th>
-                    <th colspan="3">Cabin Type</th>
-                    <th colspan="5">Destination Airport</th>
+                    <th colspan="1" />
+                    <th colspan="2">
+                        Gender
+                    </th>
+                    <th colspan="4">
+                        Age
+                    </th>
+                    <th colspan="3">
+                        Cabin Type
+                    </th>
+                    <th colspan="5">
+                        Destination Airport
+                    </th>
                 </tr>
                 <tr class="table_subheader">
 
@@ -129,9 +146,6 @@ export default {
             uniqueMonths: [],
         };
     },
-    created() {
-            this.$store.dispatch('survey/surveys');
-        },
     computed: {
         surveys() {
             return this.$store.state.survey.surveys;
@@ -151,6 +165,9 @@ export default {
             }
             return this.surveys;
         },  
+    },
+    created() {
+        this.$store.dispatch('survey/surveys');
     },
     methods: {
         countGender(gender) {

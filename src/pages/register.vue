@@ -31,12 +31,19 @@
             <div class="form__field">
                 <label for="Office">Office</label>
                 <Dropdown
-                    v-model="officeId"
-                    editable
+                    v-model="user.office"
                     :options="offices"
                     placeholder="Select an Office"
                     :style="{ width: '25vw' }"
-                    @change="changeOffice"
+                />
+            </div>
+            <div class="form__field">
+                <label for="Role">Role</label>
+                <Dropdown
+                    v-model="user.role"
+                    :options="['Administrator', 'User']"
+                    placeholder="Select an Role"
+                    :style="{ width: '25vw' }"
                 />
             </div>
             <div class="form__field">
@@ -80,7 +87,6 @@
 import Button from "primevue/button";
 import InputText from "primevue/inputtext";
 import Dropdown from "primevue/dropdown";
-import Calendar from "primevue/calendar";
 
 import { PATHS } from "../constants";
 
@@ -94,13 +100,13 @@ export default {
     data() {
         return {
             date: null,
-            officeId: null,
             user: {
                 email: "",
                 first_name: "",
                 last_name: "",
                 birthday: "",
                 office: null,
+                role: null,
                 password: "",
             },
         };
@@ -114,9 +120,11 @@ export default {
         },
         offices() {
             let titles = [];
+
             this.office.forEach((element) => {
                 titles.push(element.title);
             });
+
             return titles;
         },
     },
@@ -124,23 +132,15 @@ export default {
         this.$store.dispatch("auth/offices", this.office);
     },
     methods: {
-        changeOffice() {
-            this.office.forEach((element) => {
-                if (this.officeId === element.title) {
-                    this.user.office = element.id
-                }
-            })
-        },
-
         cancel() {
-            this.$router.push(PATHS.LOGIN);
+            this.$router.push(PATHS.ADMIN);
         },
 
         save() {
             const self = this;
-
+            
             self.$store.dispatch("auth/register", this.user).then(() => {
-                self.$router.push(PATHS.HOME);
+                self.$router.push(PATHS.ADMIN);
             });
 
             self.user.email = "";
@@ -149,6 +149,7 @@ export default {
             self.user.office = "";
             self.user.birthday = "";
             self.user.password = "";
+            self.user.role = "";
         },
     },
 };

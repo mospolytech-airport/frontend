@@ -7,7 +7,7 @@
             </button>
         </div>
         <div class="header-button">
-            <button>Add User</button>
+            <button @click="addUser">Add User</button>
             <button @click="logout">
                 Exit
             </button>
@@ -28,6 +28,7 @@
                         {{ office.title }}
                     </option>
                 </select>
+                <span class="clear-button" v-if="office !== ''" @click="removeFilter">x</span>
             </div>
             <table class="table">
                 <tr class="table_header">
@@ -79,12 +80,11 @@ export default {
     },    
     computed: {
         users() {
-            const users = this.$store.state.auth.users.map(user => {return {...user, colorClass: 'red-row' }});
+            const users = this.$store.state.auth.users;
             
             if (this.office) {
                 return users.filter(user => user.office === this.office)
             }
-            
             return users;
         },
         offices() {
@@ -96,6 +96,9 @@ export default {
         this.$store.dispatch('office/offices');
     },
     methods: {
+        addUser() {
+            this.$router.push(PATHS.REGISTER);
+        },
         logout() {
             this.$store.dispatch('auth/logout');
             this.$router.push(PATHS.LOGIN);
@@ -103,19 +106,30 @@ export default {
         async toggleUser() {
             const email = this.selectedUser.email;
             const is_active = this.selectedUser.is_active === true ? false : true;
-            await this.$store.dispatch('auth/editUser', { email, is_active });
-
-            this.selectedUser = this.users.find(user => user.id === this.selectedUser.id) 
+            try {
+                await this.$store.dispatch('auth/editUser', { email, is_active });
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+            this.selectedUser.is_active = is_active;
         },
         async changeRole() {
             const email = this.selectedUser.email;
             const role = this.selectedUser.role === "User" ? "Administrator" : "User";
-            await this.$store.dispatch('auth/editUser', { email, role });
-
-            this.selectedUser = this.users.find(user => user.id === this.selectedUser.id)
+            try {
+                await this.$store.dispatch('auth/editUser', { email, role });
+            } catch (error) {
+                console.error(error);
+                return;
+            }
+            this.selectedUser.role = role;
         },
         selectRow(id) {
             this.selectedUser = this.users.find(user => user.id === id);
+        },
+        removeFilter() {
+            this.office = "";
         }
     }
 }
@@ -182,6 +196,13 @@ export default {
 		font-size: 16px;
 		background: 0;
 	}
+}
+
+.clear-button {
+    position: relative;
+    right: 43px;
+    top: -1px;
+    cursor: pointer;
 }
 
 .table {

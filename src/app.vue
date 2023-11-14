@@ -1,23 +1,25 @@
 <template class="wrapper">
     <router-view />
+    <LogoutModal />
 </template>
 
 <script>
 import { PATHS } from './constants';
+import LogoutModal from "@/components/logout-modal.vue";
 
 export default {
     name: 'App',
-    created() {
-        this.$store.dispatch('auth/me').catch(() => {
-            this.$router.push(PATHS.LOGIN);
-        })
+    components: {
+        LogoutModal
     },
-    mounted() {
-        // window.addEventListener('beforeunload', () => {
-        //     this.$store.dispatch('auth/logout', {
-        //         error: 'Закрыл вкладку браузера без выхода из системы'
-        //     })
-        // })
+    created() {
+        this.$store.dispatch('auth/me')
+            .then(() => {
+                this.$store.dispatch('auth/toggleIsLogoutModalOpen');
+            })
+            .catch(() => {
+                this.$router.push(PATHS.LOGIN);
+            });
     }
 }
 </script>

@@ -10,7 +10,8 @@ export const authModule = {
         error: null,
         users: [],
         offices: [],
-        editUser: null
+        editUser: null,
+        isLogoutModalOpen: false
     }),
     mutations: {
         setUser: (state, user) => state.user = user,
@@ -19,6 +20,7 @@ export const authModule = {
         setOffices: (state, offices) => state.offices = offices,
         setEditUser: (state, editUser) => state.editUser = editUser,
         setUsers: (state, users) => state.users = users,
+        setIsLogoutModalOpen: (state, isLogoutModalOpen) => state.isLogoutModalOpen = isLogoutModalOpen
     },
     actions: {
         login: async ({ commit }, { username, password }) => {
@@ -82,7 +84,7 @@ export const authModule = {
                 }
             }
         },
-        editUser: async ({ commit, state}, { email, ...props }) => {
+        editUser: async ({ commit, state }, { email, ...props }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
 
@@ -153,23 +155,13 @@ export const authModule = {
                 }
             }
         },
-        register: async ({ commit }, { email, first_name, last_name, office, birthday, password }) => {
+        register: async ({ commit }, user) => {
             commit('setStatus', 'loading');
             commit('setError', null);
             try {
-                const { data: { access, data } } = await api.register({
-                    email,
-                    first_name,
-                    last_name,
-                    office,
-                    birthday,
-                    password
-                });
-
-                cookie.setCookie(ACCESS_TOKEN, access);
+                await api.register(user);
 
                 commit('setStatus', 'success');
-                commit('setUser', data);
             } catch (error) {
                 if (error instanceof Error) {
                     commit('setStatus', 'error');
@@ -193,6 +185,9 @@ export const authModule = {
                     commit('setError', error.message);
                 }
             }
+        },
+        toggleIsLogoutModalOpen: ({ commit, state }) => {
+            commit('setIsLogoutModalOpen', !state.isLogoutModalOpen);
         }
     },
     getters: {
@@ -201,6 +196,7 @@ export const authModule = {
         status: state => state.status,
         error: state => state.error,
         users: state => state.users,
+        isLogoutModalOpen: state => state.isLogoutModalOpen,
         editUser: state => ({
             email: state.editUser?.email || '',
             firstName: state.editUser?.firstName || '',
