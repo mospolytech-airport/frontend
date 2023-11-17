@@ -1,10 +1,8 @@
 import { api } from '../../api';
-import { cookie } from '../../utils/cookie';
-import { ACCESS_TOKEN } from '../../constants';
 
 export const airportModule = {
     namespaced: true,
-    state: () => ({ 
+    state: () => ({
         status: 'init', // init, loading, success, error
         error: null,
         airports: []
@@ -19,10 +17,9 @@ export const airportModule = {
             commit('setStatus', 'loading');
             commit('setError', null);
 
-            const token = cookie.getCookie(ACCESS_TOKEN);
-
             try {
-                const { data } = await api.airports({ token });
+                const { data } = await api.getAirports();
+                
                 commit('setStatus','success');
                 commit('setAirports', data);
             } catch (error) {
@@ -40,3 +37,4 @@ export const airportModule = {
       error: state => state.error,
     }
 }
+

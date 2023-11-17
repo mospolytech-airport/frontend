@@ -10,4 +10,5 @@ export const PATHS = {
     SURVEYREPORTS: '/reports-survey',
     SCHEDULES: '/schedules',
     SURVEYDETAIL: '/reports-survey/detail',
+    FLIGHT: '/flight',
 };
