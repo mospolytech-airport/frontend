@@ -86,6 +86,7 @@ export default {
 
                         timeSpent = `${addZero(hours)}:${addZero(minutes)}:${addZero(seconds)}`;
                     }
+                    console.log(error)
                     userData.push({
                         loginDate,
                         loginTime,
