@@ -8,7 +8,9 @@ import EditPage from './edit.vue';
 import MenuUserPage from './menuUsers.vue';
 import ReportsSurveyPage from './reportsSurvey.vue';
 import FlightSchedules from './flightSchedules.vue';
+import Flight from './flight.vue';
 import SurveyDetailPage from './survey/surveyDetail.vue';
+import Booking from './booking.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -75,6 +77,11 @@ const routes = [
     component: EditPage,
   },
   {
+    path: PATHS.FLIGHT,
+    name: 'FlightPage',
+    component: Flight,
+  },
+  {
     path: PATHS.SCHEDULES,
     name: 'FlightSchedules',
     component: FlightSchedules,
@@ -82,6 +89,14 @@ const routes = [
       requiresAuth: true
     }
   },
+  {
+    path: PATHS.BOOKING,
+    name: 'BookingPage',
+    component: Booking,
+    meta: {
+      requiresAuth: true
+    }
+  }
 ];
 
 const router = createRouter({

@@ -4,7 +4,10 @@ import { authModule } from './modules/auth';
 import { officeModule } from './modules/office';
 import { surveyModule } from './modules/survey';
 import { scheduleModule } from './modules/schedule';
-import { airportModule } from './modules/airport';
+import { flightModule } from "./modules/flight";
+import { airportModule } from "./modules/airport";
+import { countryModule } from "./modules/country";
+import { ticketModule } from "./modules/ticket";
 
 export const store = createStore({
     modules: {
@@ -12,6 +15,9 @@ export const store = createStore({
         office: officeModule,
         survey: surveyModule,
         schedule: scheduleModule,
+        flight: flightModule,
         airport: airportModule,
+        country: countryModule,
+        ticket: ticketModule
     }
 });

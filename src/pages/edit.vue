@@ -72,7 +72,6 @@ import Button from 'primevue/button';
 import RadioButton from 'primevue/radiobutton';
 import ProgressSpinner from 'primevue/progressspinner';
 import Dropdown from 'primevue/dropdown';
-import {PATHS} from "@/constants.js";
 
 export default {
     name: 'EditPage',
