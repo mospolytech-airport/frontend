@@ -1,27 +1,27 @@
 import { api } from '../../api';
 
-export const airportModule = {
+export const countryModule = {
     namespaced: true,
     state: () => ({
         status: 'init', // init, loading, success, error
         error: null,
-        airports: []
+        countries: []
     }),
     mutations: {
         setStatus: (state, status) => state.status = status,
         setError: (state, error) => state.error = error,
-        setAirports: (state, airports) => state.airports = airports,
+        setCountries: (state, countries) => state.countries = countries,
     },
     actions: {
-        getAirports: async ({ commit }) => {
+        getCountries: async ({ commit }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
 
             try {
-                const { data } = await api.getAirports();
+                const { data } = await api.getCountries();
 
                 commit('setStatus','success');
-                commit('setAirports', data);
+                commit('setCountries', data);
             } catch (error) {
                 if (error instanceof Error) {
                     commit('setStatus', 'error');
@@ -31,10 +31,9 @@ export const airportModule = {
         }
     },
     getters: {
-      airports: state => state.airports,
-      airport: state => airport_id => state.airports.filter(airport => airport.id === airport_id),
-      status: state => state.status,
-      error: state => state.error,
+        countries: state => state.countries,
+        status: state => state.status,
+        error: state => state.error,
     }
 }
 

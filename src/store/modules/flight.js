@@ -31,7 +31,8 @@ export const flightModule = {
         },
     },
     getters: {
-        outboundFlights: state => state.data?.outbound || [],
+        outboundFlights: state => state.data?.outbound || {},
+        returnFlights: state => state.data?.return || {},
         error: state => state.error,
         loading: state => state.loading
     }

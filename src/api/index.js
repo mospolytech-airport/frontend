@@ -33,4 +33,6 @@ export const api = {
         instanceApi.patch(`/schedules/${id}/`, { Date, Time, EconomyPrice }, { headers: { Authorization: `Bearer ${token}` } }),
     importSchedules: ({ token, formData }) =>
         instanceApi.post('/schedules/import/', formData, { headers: { Authorization: `Bearer ${token}` } }),
+    getCountries: () => instanceApi.get('/country'),
+    createTicket: ({ data, token }) => instanceApi.post('/tickets/booking/', data, { headers: { Authorization: `Bearer ${token}` } })
 };
