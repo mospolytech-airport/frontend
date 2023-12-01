@@ -14,10 +14,12 @@ export const api = {
     editUser: ({ token, email, ...props }) => instanceApi.patch('/auth/edit/', { email, ...props },
         { headers: { Authorization: `Bearer ${token}` } }
     ),
+    getBooking: ({booking_reference}) => instanceApi.post('/tickets/searchbooking/', {booking_reference}),
     getUser: ({ id, token }) => instanceApi.get(`/auth/user/${id}`, { headers: { Authorization: `Bearer ${token}` }}),
     users: ({ token }) => instanceApi.get('/auth/users/', { headers: { Authorization: `Bearer ${token}` } }),
     offices: ({ token }) => instanceApi.get('/office/', { headers: { Authorization: `Bearer ${token}` } }),
     officesRegister: () => instanceApi.get('/office'),
+    amenities: ({ token }) => instanceApi.get('/amenity', { headers: { Authorization: `Bearer ${token}` } }),
     logout: ({ token, error }) => instanceApi.post('/auth/logout/', { error }, {
         headers: { Authorization: `Bearer ${token}` }
     }),
@@ -34,5 +36,8 @@ export const api = {
     importSchedules: ({ token, formData }) =>
         instanceApi.post('/schedules/import/', formData, { headers: { Authorization: `Bearer ${token}` } }),
     getCountries: () => instanceApi.get('/country'),
-    createTicket: ({ data, token }) => instanceApi.post('/tickets/booking/', data, { headers: { Authorization: `Bearer ${token}` } })
+    createTicket: ({ data, token }) => instanceApi.post('/tickets/booking/', data, { headers: { Authorization: `Bearer ${token}` } }),
+    cabinType: () => instanceApi.get('/cabintype/'),
+    amenityCabin: () => instanceApi.get('/amenity-cabin/'),
+    amenityTicket: () => instanceApi.get('/amenity-ticket/'),
 };

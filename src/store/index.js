@@ -8,6 +8,7 @@ import { flightModule } from "./modules/flight";
 import { airportModule } from "./modules/airport";
 import { countryModule } from "./modules/country";
 import { ticketModule } from "./modules/ticket";
+import { amenitiesModule } from './modules/amenity';
 
 export const store = createStore({
     modules: {
@@ -18,6 +19,7 @@ export const store = createStore({
         flight: flightModule,
         airport: airportModule,
         country: countryModule,
-        ticket: ticketModule
+        ticket: ticketModule,
+        amenity: amenitiesModule
     }
 });

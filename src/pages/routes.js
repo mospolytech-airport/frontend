@@ -11,6 +11,7 @@ import FlightSchedules from './flightSchedules.vue';
 import Flight from './flight.vue';
 import SurveyDetailPage from './survey/surveyDetail.vue';
 import Booking from './booking.vue';
+import AdditionalServecis from './additionalServecis.vue';
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -93,6 +94,14 @@ const routes = [
     path: PATHS.BOOKING,
     name: 'BookingPage',
     component: Booking,
+    meta: {
+      requiresAuth: true
+    }
+  },
+  {
+    path: PATHS.ADDITIONALSERVECIS,
+    name: 'AdditionalServecis',
+    component: AdditionalServecis,
     meta: {
       requiresAuth: true
     }
