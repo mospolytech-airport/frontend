@@ -69,6 +69,7 @@ export default {
     },
     methods: {
         exit() {
+            window.close();
         },
         login() {
             const self = this;
