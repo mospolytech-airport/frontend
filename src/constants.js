@@ -11,5 +11,6 @@ export const PATHS = {
     SCHEDULES: '/schedules',
     SURVEYDETAIL: '/reports-survey/detail',
     FLIGHT: '/flight',
-    BOOKING: '/booking'
+    BOOKING: '/booking',
+    ADDITIONALSERVECIS: '/additional',
 };
