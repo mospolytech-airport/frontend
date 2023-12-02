@@ -12,6 +12,7 @@ export const amenitiesModule = {
         cabintype: null,
         amenityCabin: null,
         amenityTicket: null,
+        newAmenityTicket: []
     }),
     mutations: {
         setStatus: (state, status) => state.status = status,
@@ -21,8 +22,25 @@ export const amenitiesModule = {
         setBooking: (state, booking) => state.booking = booking,
         setCabintype: (state, cabintype) => state.cabintype = cabintype,
         setAmenityTicket: (state, amenityTicket) => state.amenityTicket = amenityTicket,
+        setNewAmenityTicket: (state, amenityTicket) => state.newAmenityTicket.push(amenityTicket)
     },
     actions: {
+        confirmAmenityTicket: async ({ commit }, { ticket, amenity }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            try {
+                const { data } = await api.confirmAmenityTicket({ ticket, amenity });
+
+                commit('setStatus', 'success');
+                commit('setNewAmenityTicket', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
         getAmenities: async ({ commit }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
@@ -109,6 +127,7 @@ export const amenitiesModule = {
         booking: state => state.booking,
         amenityCabin: state => state.amenityCabin,
         amenityTicket: state => state.amenityTicket,
+        newAmenityTicket: state => state.newAmenityTicket,
         cabintype: state => state.cabintype,
         status: state => state.status,
         error: state => state.error,

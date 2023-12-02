@@ -7,7 +7,9 @@
             </button>
         </div>
         <div class="header-button">
-            <button @click="addUser">Add User</button>
+            <button @click="addUser">
+                Add User
+            </button>
             <button @click="logout">
                 Exit
             </button>
@@ -28,7 +30,11 @@
                         {{ office.title }}
                     </option>
                 </select>
-                <span class="clear-button" v-if="office !== ''" @click="removeFilter">x</span>
+                <span
+                    v-if="office !== ''"
+                    class="clear-button"
+                    @click="removeFilter"
+                >x</span>
             </div>
             <table class="table">
                 <tr class="table_header">
@@ -39,8 +45,8 @@
                     <th>Email Adress</th>
                     <th>Office</th>
                 </tr>
-                <tr 
-                    v-for="({id, first_name, last_name, birthday, role, email, office, is_active}) in users" 
+                <tr
+                    v-for="({id, first_name, last_name, birthday, role, email, office, is_active}) in users"
                     :key="id"
                     class="table_row"
                     :class="{ active: id === selectedUser?.id, disabled: !is_active, enabled: is_active}"
@@ -56,12 +62,12 @@
             </table>
             <div class="buttons">
                 <button @click="changeRole">
-                    Change Role
+                    Edit Role
                 </button>
                 <button @click="toggleUser">
                     Enable/Disable Login
                 </button>
-            </div>	
+            </div>
         </div>
     </main>
 </template>
@@ -76,12 +82,12 @@ export default {
             office: "",
             selectedUser: null,
             isActive: null
-        }  
-    },    
+        }
+    },
     computed: {
         users() {
             const users = this.$store.state.auth.users;
-            
+
             if (this.office) {
                 return users.filter(user => user.office === this.office)
             }
@@ -114,16 +120,10 @@ export default {
             }
             this.selectedUser.is_active = is_active;
         },
-        async changeRole() {
-            const email = this.selectedUser.email;
-            const role = this.selectedUser.role === "User" ? "Administrator" : "User";
-            try {
-                await this.$store.dispatch('auth/editUser', { email, role });
-            } catch (error) {
-                console.error(error);
-                return;
-            }
-            this.selectedUser.role = role;
+        changeRole() {
+            const  { id } = this.selectedUser;
+
+            this.$router.push(`/edit/${id}`);
         },
         selectRow(id) {
             this.selectedUser = this.users.find(user => user.id === id);
@@ -226,7 +226,7 @@ export default {
     }
     .disabled {
         background-color: red;
-        color: white; 
+        color: white;
     }
     &_row {
         td {

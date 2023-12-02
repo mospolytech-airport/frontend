@@ -44,7 +44,7 @@ import InputText from 'primevue/inputtext';
 import Button from 'primevue/button';
 
 import { PATHS } from '../constants';
-    
+
 export default {
     name: 'LoginPage',
     components: {
@@ -69,11 +69,11 @@ export default {
     },
     methods: {
         exit() {
-            window.close();
+            window.location.href = 'https://google.com';
         },
         login() {
             const self = this;
-                
+
             self.$store.dispatch('auth/login', this.user).then(() => {
                 self.$router.push(PATHS.HOME);
             })

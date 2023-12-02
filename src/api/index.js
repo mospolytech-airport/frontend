@@ -40,4 +40,5 @@ export const api = {
     cabinType: () => instanceApi.get('/cabintype/'),
     amenityCabin: () => instanceApi.get('/amenity-cabin/'),
     amenityTicket: () => instanceApi.get('/amenity-ticket/'),
+    confirmAmenityTicket: ({ ticket, amenity }) => instanceApi.post('/amenity-ticket/', { ticket, amenity })
 };

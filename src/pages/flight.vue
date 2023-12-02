@@ -62,6 +62,7 @@
                     <Checkbox
                         v-model="outboundThreeDate"
                         :binary="true"
+                        @change="getThreeDate"
                     />
                     <span>Display three days before and after</span>
                 </label>
@@ -178,6 +179,9 @@ export default {
         this.$store.dispatch('airport/getAirports');
     },
     methods: {
+        getThreeDate() {
+            this.$store.dispatch('flights/getFlight');
+        },
         book() {
             this.$router.push(PATHS.BOOKING);
         },
