@@ -104,6 +104,8 @@
 </template>
 <script>
 import { mapGetters } from 'vuex';
+import { PATHS } from '../constants';
+
 export default {
     name: 'AddirionalServecis',
     data() {
@@ -125,10 +127,20 @@ export default {
             this.showInfo = true;
         },
         confirmAmenityTicket() {
-            this.currentAmenities.forEach((amenity) => {
-                console.log(this.currentAmenities);
-                console.log(this.currentschedule);
-                this.$store.dispatch('amenity/confirmAmenityTicket', { amenity, ticket: this.currentschedule });
+            const self = this;
+
+            self.resultAmenities.forEach((amenity) => {
+                let pr
+                self.amenities.forEach((e) => {
+                    if (e.id == amenity) {
+                        pr = e.price + ".0000"
+                    }
+                })
+                // console.log(pr)
+                self.$store.dispatch('amenity/confirmAmenityTicket', { amenity, ticket: this.currentUser.id, price: pr});
+            }).then(() => {
+                self.$router.push(PATHS.HOME);
+                //хуй знает почему эта хуета не работает, вообще не понимаю, пофикси плиз
             });
         }
     },

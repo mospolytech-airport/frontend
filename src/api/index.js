@@ -40,5 +40,6 @@ export const api = {
     cabinType: () => instanceApi.get('/cabintype/'),
     amenityCabin: () => instanceApi.get('/amenity-cabin/'),
     amenityTicket: () => instanceApi.get('/amenity-ticket/'),
-    confirmAmenityTicket: ({ ticket, amenity }) => instanceApi.post('/amenity-ticket/', { ticket, amenity })
+    confirmAmenityTicket: ({ token, ticket, amenity, price }) => instanceApi.post('/amenity-ticket/', { ticket, amenity, price },
+    { headers: { Authorization: `Bearer ${token}` } }),
 };
