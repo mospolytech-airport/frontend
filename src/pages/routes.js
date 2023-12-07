@@ -12,6 +12,7 @@ import Flight from './flight.vue';
 import SurveyDetailPage from './survey/surveyDetail.vue';
 import Booking from './booking.vue';
 import AdditionalServecis from './additionalServecis.vue';
+import Review from './review.vue'
 import { ACCESS_TOKEN, PATHS } from '../constants';
 import { cookie } from '../utils/cookie';
 
@@ -31,6 +32,11 @@ const routes = [
     meta: {
       requiresAuth: true
     }
+  },
+  {
+    path: PATHS.REVIEW,
+    name: 'ReviewPage',
+    component: Review,
   },
   {
     path: PATHS.REGISTER,

@@ -15,6 +15,22 @@ export const ticketModule = {
         setTickets: (state, tickets) => state.tickets = tickets,
     },
     actions: {
+        getTickets: async ({ commit }) => {
+            commit('setStatus', 'loading');
+            commit('setError', null);
+
+            try {
+                const { data } = await api.getTickets();
+                commit('setStatus', 'success');
+                commit('setTickets', data);
+            } catch (error) {
+                if (error instanceof Error) {
+                    commit('setStatus', 'error');
+                    commit('setError', error.message);
+                }
+            }
+        },
+
         createTickets: async ({ commit }, { users, outboundFlights, returnFlights }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
