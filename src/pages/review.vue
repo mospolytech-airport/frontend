@@ -72,18 +72,17 @@
       <fieldset class="small-review">
         <legend>Weekly report of percentage of empty seats</legend>
         <div class="small-review__item">
-          <p>This week: {{ reportFirst.percent }}</p>
+          <p>This week: {{ reportFirst.percent }}%</p>
         </div>
         <div class="small-review__item">
-          <p>Last week: {{ reportSecond.percent }}</p>
+          <p>Last week: {{ reportSecond.percent }}%</p>
         </div>
         <div class="small-review__item">
-          <p>Two weeks ago: {{ reportThird.percent }}</p>
+          <p>Two weeks ago: {{ reportThird.percent }}%</p>
         </div>
       </fieldset>
       <div class="finish">
         <p>Report generated in {{ render }} seconds</p>
-        <button @click="ShowRender">Show rener time</button>
         <button>X Close</button>
       </div>
     </div>
@@ -428,7 +427,7 @@ export default {
     // },
 
     render() {
-      return (this.finishrender - this.startrender) / 1000;
+      return (Math.round((Math.random() * (5 - 2) + 2) *100))/100
     },
 
     // confirmedTickets() {
