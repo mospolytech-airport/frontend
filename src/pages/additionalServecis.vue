@@ -130,18 +130,18 @@ export default {
             const self = this;
 
             self.resultAmenities.forEach((amenity) => {
-                let pr
+                let pr;
+
                 self.amenities.forEach((e) => {
                     if (e.id == amenity) {
                         pr = e.price + ".0000"
                     }
-                })
-                // console.log(pr)
+                });
+
                 self.$store.dispatch('amenity/confirmAmenityTicket', { amenity, ticket: this.currentUser.id, price: pr});
-            }).then(() => {
-                self.$router.push(PATHS.HOME);
-                //хуй знает почему эта хуета не работает, вообще не понимаю, пофикси плиз
             });
+
+            self.$router.push(PATHS.HOME);
         }
     },
     computed: {
