@@ -25,12 +25,14 @@ export const amenitiesModule = {
         setNewAmenityTicket: (state, amenityTicket) => state.newAmenityTicket.push(amenityTicket)
     },
     actions: {
-        confirmAmenityTicket: async ({ commit }, { ticket, amenity }) => {
+        confirmAmenityTicket: async ({ commit }, { ticket, amenity, price }) => {
             commit('setStatus', 'loading');
             commit('setError', null);
 
+            const token = cookie.getCookie(ACCESS_TOKEN);
+
             try {
-                const { data } = await api.confirmAmenityTicket({ ticket, amenity });
+                const { data } = await api.confirmAmenityTicket({ ticket, amenity, price, token });
 
                 commit('setStatus', 'success');
                 commit('setNewAmenityTicket', data);

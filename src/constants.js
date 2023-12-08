@@ -13,4 +13,5 @@ export const PATHS = {
     FLIGHT: '/flight',
     BOOKING: '/booking',
     ADDITIONALSERVECIS: '/additional',
+    REVIEW: '/review',
 };
